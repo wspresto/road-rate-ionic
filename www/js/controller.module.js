@@ -1,4 +1,5 @@
 angular.module('unisys.onboarding.controllers', [
     'unisys.onboarding.menu',
-    'unisys.onboarding.landing'
+    'unisys.onboarding.landing',
+    'unisys.onboarding.road'
 ]);

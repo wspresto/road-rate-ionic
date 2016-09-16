@@ -33,8 +33,17 @@ angular.module('unisys.onboarding', ['ionic', 'unisys.onboarding.controllers', '
       }
     }
   })
+  .state('app.road', {
+    url: '/road',
+    views: {
+      'content@app': {
+        controller: 'RoadCtrl as vm',
+        templateUrl: 'road/road.html'
+      }
+    }
+  })  
   .state('app.landing', {
-    url: '',
+    url: '/landing',
     views: {
       'content@app': {
         controller: 'LandingCtrl as vm',
@@ -44,6 +53,6 @@ angular.module('unisys.onboarding', ['ionic', 'unisys.onboarding.controllers', '
 
   });
 
-  $urlRouterProvider.otherwise('/road-rate');
+  $urlRouterProvider.otherwise('/road-rate/landing');
 
 }]);
