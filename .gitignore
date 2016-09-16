@@ -1,0 +1,7 @@
+node_modules/
+hooks/
+plugins/
+www/*
+!/www/js/
+!/www/css/
+!/www/index.html
