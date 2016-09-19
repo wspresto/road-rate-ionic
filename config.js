@@ -29,6 +29,8 @@ module.exports = {
       prod: []
   },
   libs: [
-        'underscore/underscore.js'
+        'underscore/underscore.js',
+        'moment/moment.js',
+        'angular-moment/angular-moment.js'
         ]   
 };

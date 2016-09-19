@@ -4,7 +4,14 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('unisys.onboarding', ['ionic', 'unisys.onboarding.controllers', 'unisys.onboarding.constants', 'unisys.onboarding.templates'])
+angular.module('unisys.onboarding',
+ [
+  'ionic',
+  'angularMoment',
+  'unisys.onboarding.controllers',
+  'unisys.onboarding.constants',
+  'unisys.onboarding.templates'
+  ])
 
 .run(['$ionicPlatform', function($ionicPlatform) {
   $ionicPlatform.ready(function() {

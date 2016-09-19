@@ -1,7 +1,9 @@
-<br>
-<br>
-<br>
-<br>
-<br>
-    <h1>TODO: Road Rate</h1>
-
+<ion-view view-title="Activity Feed">
+    <ion-content>
+        <div ng-repeat="activity in vm.activities" class="card">
+            <div class="item item-text-wrap">
+                {{activity.label}}
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
