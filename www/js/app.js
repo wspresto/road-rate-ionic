@@ -58,6 +58,15 @@ angular.module('unisys.onboarding',
       }
     }
 
+  })
+  .state('app.login', {
+    url: '/login',
+    views: {
+      'content@app': {
+        controller: 'loginCtrl as vm',
+        templateUrl: 'login/login.html'
+      }
+    }
   });
 
   $urlRouterProvider.otherwise('/road-rate/landing');

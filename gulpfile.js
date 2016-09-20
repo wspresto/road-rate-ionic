@@ -16,6 +16,7 @@ var ngConstant = require('gulp-ng-constant');
 var replace = require('gulp-replace');
 var merge = require('merge-stream');
 var exec = require('child_process');
+var watch = require('gulp-watch')
 
 //constants
 var config = require('./config');
@@ -30,6 +31,14 @@ gulp.task('default', ['build']);
 gulp.task('help', function () {
     console.log('available commands: [build, build-js, build-css]');
 });
+gulp.task('watch', function () {
+  gulp.watch([
+      'www/**/*',
+      '!www/dist/*',
+      '!www/lib/*'
+  ], ['default']);
+});
+
 function clean () {
   return del([(config.build + '**')]);
 }

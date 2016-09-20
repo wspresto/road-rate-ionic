@@ -1,4 +1,7 @@
 {
   "name": "road-rate-ionic",
-  "app_id": ""
+  "app_id": "",
+  "gulpStartupTasks": [
+    "watch"
+  ]
 }
