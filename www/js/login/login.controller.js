@@ -1,8 +1,8 @@
 angular.module('unisys.onboarding.login')
-    .controller('loginCtrl', loginCtrl);
+    .controller('LoginCtrl', LoginCtrl);
 
-loginCtrl.$inject = ['$scope'];
+LoginCtrl.$inject = ['$scope'];
 
-function loginCtrl ($scope) {
-    
+function LoginCtrl ($scope) {
+    var vm = this;
 }
