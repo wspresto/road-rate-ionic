@@ -4,6 +4,7 @@
   "description": "road-rate-ionic: An Ionic project",
   "dependencies": {
     "angular-moment": "^1.0.0-beta.6",
+    "cbp-theme": "^0.3.2",
     "del": "2.2.0",
     "gulp": "3.9.0",
     "gulp-angular-templatecache": "1.8.0",

@@ -7,6 +7,7 @@ module.exports = {
   target: TARGET,
   src: './www/',
   build: './www/dist/',
+  fontsDest: './www/fonts/',
   paths: {
     scssVars: '/css/variables.scss',
     ngDocs: './docs/'
@@ -15,19 +16,17 @@ module.exports = {
     USER: 'user1'
   },
   globs: {
-    sass: ['+(app|scss)/**/!(variables).scss'],
+    sass: ['+(js|css)/**/!(variables).scss'],
     templates: ['js/**/*.html'],
     scripts: ['js/**/*module*.js', 'js/**/*controller*.js', 'js/**/*.js', ],
     assets: ['assets/**/*']
   },
-  fonts: {
-      dev: [],
-      prod: []
-  },
-  cssLibs: {
-      dev: [],
-      prod: []
-  },
+  fonts: [
+    'cbp-theme/dist/fonts/*.*'
+  ],
+  cssLibs: [
+    'cbp-theme/dist/styles/cbp-theme.css'
+  ],
   libs: [
         'underscore/underscore.js',
         'moment/moment.js',

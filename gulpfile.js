@@ -22,11 +22,13 @@ var watch = require('gulp-watch')
 var config = require('./config');
 
 gulp.task('clean', clean);
+gulp.task('fonts', fonts);
 gulp.task('lib-js', libJS);
+gulp.task('lib-css', libCSS);
 gulp.task('build-js', buildJS);
 gulp.task('build-html', buildHTML);
 gulp.task('build-sass', buildSASS);
-gulp.task('build', ['build-js', 'build-html', 'build-sass', 'lib-js']);
+gulp.task('build', ['build-js', 'build-html', 'build-sass', 'lib-js', 'lib-css', 'fonts']);
 gulp.task('default', ['build']);
 gulp.task('help', function () {
     console.log('available commands: [build, build-js, build-css]');
@@ -66,6 +68,17 @@ function buildSASS () {
     .on('error', sass.logError)
     .pipe(autoprefixer())
     .pipe(gulp.dest(config.build));
+}
+function fonts () {
+  var modules = gulp.src(config.fonts, {cwd: './node_modules/'})
+    .pipe(gulp.dest(config.fontsDest));
+  return merge(modules);
+}
+function libCSS () {
+  var modules = gulp.src(config.cssLibs, {cwd: './node_modules/'})
+    .pipe(concat('lib.css'))
+    .pipe(gulp.dest(config.build));
+  return merge(modules);
 }
 function libJS () {
   var modules = gulp.src(config.libs, {cwd: './node_modules/'})
