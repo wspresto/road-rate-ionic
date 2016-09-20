@@ -35,8 +35,8 @@ angular.module('unisys.onboarding',
     abstract: true, 
     views: {
       '': {
-        templateUrl: 'menu/menu.html',
-        controller: 'MenuCtrl as vm'
+        controller: 'MenuCtrl as vm',
+        templateUrl: 'menu/menu.html'
       }
     }
   })
@@ -63,7 +63,7 @@ angular.module('unisys.onboarding',
     url: '/login',
     views: {
       'content@app': {
-        controller: 'loginCtrl as vm',
+        controller: 'LoginCtrl as vm',
         templateUrl: 'login/login.html'
       }
     }
