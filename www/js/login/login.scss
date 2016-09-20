@@ -1,4 +1,17 @@
-$green: green;
-.login-header {
-    color: $green;
+.login {
+    padding: 15px;
+    legend {
+        border: none;
+    }
+    .login-header {
+        color: #333;
+        font-size: 2rem;
+        text-align: center;
+    }
+    .login-btn {
+        float: right;
+    }
+    &:after {
+        clear: both;
+    }
 }
