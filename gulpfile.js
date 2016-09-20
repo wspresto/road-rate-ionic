@@ -37,6 +37,7 @@ gulp.task('watch', function () {
   gulp.watch([
       'www/**/*',
       '!www/dist/*',
+      '!www/fonts/*',
       '!www/lib/*'
   ], ['default']);
 });
