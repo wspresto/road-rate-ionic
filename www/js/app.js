@@ -58,7 +58,7 @@ angular.module('unisys.onboarding',
     views: {
       'content@app': {
         controller: 'RoadCtrl as vm',
-        templateUrl: 'road/road.html'
+        templateUrl: 'map/map.html'
       }
     }
   })  

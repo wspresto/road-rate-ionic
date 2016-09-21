@@ -1,13 +1,11 @@
 angular.module('unisys.onboarding.road')
 .controller('RoadCtrl', RoadCtrl);
 
-RoadCtrl.$inject = ['$scope'];
+RoadCtrl.$inject = ['$scope', '$ionicActionSheet'];
 
-
-function RoadCtrl ($scope) {
+function RoadCtrl ($scope, $ionicActionSheet) {
     var vm = this;
     vm.showVotingSheet = showVotingSheet;
-
 
     function showVotingSheet () {
         $ionicActionSheet.show({
