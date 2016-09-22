@@ -31,6 +31,11 @@ module.exports = {
         'underscore/underscore.js',
         'moment/moment.js',
         'angular-moment/angular-moment.js',
-        'login-utils'
+
+        'login-utils',
+
+        'angular-esri-map/dist/angular-esri-core.js',
+        'angular-esri-map/dist/angular-esri-map.js'   
+
         ]   
 };
