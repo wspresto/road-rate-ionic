@@ -8,6 +8,8 @@ angular.module('unisys.onboarding',
  [
   'ionic',
   'angularMoment',
+  'esri.map',
+  'esri.core',
   'unisys.onboarding.controllers',
   'unisys.onboarding.constants',
   'unisys.onboarding.templates'

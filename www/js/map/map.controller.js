@@ -6,7 +6,15 @@ RoadCtrl.$inject = ['$scope', '$ionicActionSheet'];
 function RoadCtrl ($scope, $ionicActionSheet) {
     var vm = this;
     vm.showVotingSheet = showVotingSheet;
-
+    vm.map = {
+        options: {
+            basemap: 'topo',
+            center: [-77.351302, 38.954555],
+            zoom: 13,
+            sliderStyle: 'small'
+        }
+    };
+    
     function showVotingSheet () {
         $ionicActionSheet.show({
             destructiveText: 'Hate it',
