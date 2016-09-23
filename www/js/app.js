@@ -13,7 +13,10 @@ angular.module('unisys.onboarding',
   'unisys.onboarding.controllers',
   'unisys.onboarding.constants',
   'unisys.onboarding.templates',
-  'unisys.onboarding.loginUtils'
+  'unisys.onboarding.loginUtils',
+
+  'unisys.onboarding.directives'
+
   ])
 
 .run(['$q', '$ionicPlatform', '$rootScope', '$state', 'loginUtils', function($q, $ionicPlatform, $rootScope, $state, loginUtils) {
