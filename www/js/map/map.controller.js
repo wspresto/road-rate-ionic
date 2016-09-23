@@ -18,6 +18,8 @@ function RoadCtrl ($scope, $ionicActionSheet, esriRegistry) {
     esriRegistry.get('mapA').then(function (map) {
         map.on("load", function() {
             map.disablePan();
+            map.hideZoomSlider();
+            map.disableScrollWheelZoom();
         });
     });
 
