@@ -12,7 +12,8 @@ angular.module('unisys.onboarding',
   'esri.core',
   'unisys.onboarding.controllers',
   'unisys.onboarding.constants',
-  'unisys.onboarding.templates'
+  'unisys.onboarding.templates',
+  'unisys.onboarding.directives'
   ])
 
 .run(['$ionicPlatform', function($ionicPlatform) {
