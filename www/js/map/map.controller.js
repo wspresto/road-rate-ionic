@@ -1,11 +1,13 @@
 angular.module('unisys.onboarding.road')
 .controller('RoadCtrl', RoadCtrl);
 
-RoadCtrl.$inject = ['$scope', '$ionicActionSheet', 'esriRegistry'];
+RoadCtrl.$inject = ['$scope', '$ionicActionSheet', 'esriRegistry', '$timeout'];
 
-function RoadCtrl ($scope, $ionicActionSheet, esriRegistry) {
+function RoadCtrl ($scope, $ionicActionSheet, esriRegistry, $timeout) {
     var vm = this;
-    vm.showVotingSheet = showVotingSheet;
+    vm.downVote = downVote;
+    vm.upVote = upVote;
+    vm.voteConfirmationDelay = 5 * 1000;
     vm.map = {
         options: {
             basemap: 'streets',
@@ -15,30 +17,28 @@ function RoadCtrl ($scope, $ionicActionSheet, esriRegistry) {
             logo: false
         }
     };
-    esriRegistry.get('mapA').then(function (map) {
-        map.on("load", function() {
-            map.disablePan();
-            map.hideZoomSlider();
-            map.disableScrollWheelZoom();
+    init();
+    function downVote () {
+        var close = $ionicActionSheet.show({     
+            titleText: 'You like this road.',
         });
-    });
-
-    function showVotingSheet () {
-        $ionicActionSheet.show({
-            destructiveText: 'Hate it',
-            buttons: [
-                {
-                    text: 'This is nice'
-                },
-            ],            
-            titleText: 'Rate this road',
-            cancelText: 'Nevermind',
-            cancel: function() {
-                // add cancel code..
-                },
-            buttonClicked: function(index) {
-            return true;
-            }
-        });
+        $timeout(close, vm.voteConfirmationDelay); 
     }
+    function upVote () {
+        var close = $ionicActionSheet.show({    
+            titleText: 'You hate this road.',
+        });
+        $timeout(close, vm.voteConfirmationDelay); 
+
+    }
+
+    function init () {
+        esriRegistry.get('roadMap').then(function (map) {
+            map.on("load", function() {
+                map.disablePan();
+                map.hideZoomSlider();
+                map.disableScrollWheelZoom();
+            });
+        });
+    }    
 }
