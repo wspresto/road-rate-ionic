@@ -1,20 +1,26 @@
 angular.module('unisys.onboarding.road')
 .controller('RoadCtrl', RoadCtrl);
 
-RoadCtrl.$inject = ['$scope', '$ionicActionSheet'];
+RoadCtrl.$inject = ['$scope', '$ionicActionSheet', 'esriRegistry'];
 
-function RoadCtrl ($scope, $ionicActionSheet) {
+function RoadCtrl ($scope, $ionicActionSheet, esriRegistry) {
     var vm = this;
     vm.showVotingSheet = showVotingSheet;
     vm.map = {
         options: {
-            basemap: 'topo',
+            basemap: 'streets',
             center: [-77.351302, 38.954555],
             zoom: 13,
-            sliderStyle: 'small'
+            sliderStyle: 'small',
+            logo: false
         }
     };
-    
+    esriRegistry.get('mapA').then(function (map) {
+        map.on("load", function() {
+            map.disablePan();
+        });
+    });
+
     function showVotingSheet () {
         $ionicActionSheet.show({
             destructiveText: 'Hate it',
