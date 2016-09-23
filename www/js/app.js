@@ -28,7 +28,7 @@ angular.module('unisys.onboarding',
   });
 }])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-
+  
   $stateProvider
   .state('app', {
     url: '/road-rate',
@@ -69,6 +69,10 @@ angular.module('unisys.onboarding',
     }
   });
 
-  $urlRouterProvider.otherwise('/road-rate/landing');
+  if (localStorage.length <= 0) {
+    $urlRouterProvider.otherwise('/road-rate/login');
+  } else {
+    $urlRouterProvider.otherwise('/road-rate/landing');
+  }
 
 }]);
