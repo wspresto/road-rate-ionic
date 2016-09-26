@@ -6,12 +6,14 @@ angular.module('unisys.onboarding.directives')
         restrict: 'E',
         transclude: true,
         scope: {
-            x: '@x',
-            y: '@y'
+            left: '@left',
+            top: '@top',
+            bottom: '@bottom',
+            right: '@right'
         },
         link: function (scope, element, attributes) {
             var $div = angular.element(element[0].getElementsByClassName('text-cloud-box'));
-            $div.css({'top': attributes.y, 'left': attributes.x});
+            $div.css({'top': attributes.top, 'left': attributes.left, 'bottom': attributes.bottom, 'right': attributes.right});
         }
     }
 })
