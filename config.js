@@ -18,7 +18,7 @@ module.exports = {
   globs: {
     sass: ['+(js|css)/**/!(variables).scss'],
     templates: ['js/**/*.html'],
-    scripts: ['js/**/*module*.js', 'js/**/*controller*.js', 'js/**/*.js', ],
+    scripts: ['js/**/*module*.js', 'js/**/*controller*.js', 'js/**/*.js' ],
     assets: ['assets/**/*']
   },
   fonts: [
@@ -30,6 +30,7 @@ module.exports = {
   libs: [
         'underscore/underscore.js',
         'moment/moment.js',
-        'angular-moment/angular-moment.js'
+        'angular-moment/angular-moment.js',
+        'login-utils'
         ]   
 };

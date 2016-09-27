@@ -1,4 +1,11 @@
-var loginUtils = (function (){
+'use strict';
+angular.module('unisys.onboarding.loginUtils', [])
+    .factory('loginUtils', loginUtils);
+
+    loginUtils.$inject = [];
+
+function loginUtils () {
+
     var config = {
         apiKey: "AIzaSyDRaQNaGdU0RZNXZEAciKlL2xtmSfMM-_M",
         authDomain: "road-rate.firebaseapp.com",
@@ -8,58 +15,81 @@ var loginUtils = (function (){
     };
     firebase.initializeApp(config);
 
-    return {
-        isUserValid: function () {
-            if (!firebase.auth().currentUser) {
-                var provider = new firebase.auth.GoogleAuthProvider();
-                provider.addScope('https://www.googleapis.com/auth/plus.login');
-
-                firebase.auth().signInWithPopup(provider).then(function(result) {
-                    // This gives you a Google Access Token. You can use it to access the Google API.
-                    var token = result.credential.accessToken;
-                    // The signed-in user info.
-                    var user = result.user;
-
-                    document.getElementById('quickstart-oauthtoken').textContent = token;
-                }).catch(function(error) {
-                    // Handle Errors here.
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    var email = error.email;
-                    var credential = error.credential;
-                    if (errorCode === 'auth/account-exists-with-different-credential') {
-                        alert('You have already signed up with a different auth provider for that email.');
-                        // If you are using multiple auth providers on your app you should handle linking
-                        // the user's accounts here.
-                    } else {
-                        console.error(error);
-                    }
-                });
+    var utils = {
+        initialize: function () {
+            this.providers = {
+                google: new firebase.auth.GoogleAuthProvider(),
+                github: new firebase.auth.GithubAuthProvider()
+            };
+            this.user = {};
+        },
+        isUserValid: firebase.auth().onAuthStateChanged(function () {
+            if (this.user) {
                 return true;
             } else {
-                firebase.auth().signOut();
                 return false;
             }
+        }),
+        signout: function () {
+            firebase.auth().signOut();
+            this.user = {};
         },
-        checkAuthStateChange: function () {
-            firebase.auth().onAuthStateChanged(function(user){
-                if (user) {
-                // User is signed in.
-                var displayName = user.displayName;
-                var email = user.email;
-                var emailVerified = user.emailVerified;
-                var photoURL = user.photoURL;
-                var isAnonymous = user.isAnonymous;
-                var uid = user.uid;
-                var providerData = user.providerData;
+        toggleLogin: function (chosenProvider) {
+            var that = this;
+            if (!firebase.auth().currentUser) {
+                var provider = this.providers[chosenProvider];
 
-                } else {
-                // User is signed out.
-                
+                switch (provider.providerId) {
+                    case "google.com":
+                        provider.addScope('https://www.googleapis.com/auth/plus.login');
+                        break;
+                    case "github.com":
+                        provider.addScope('repo');
+                        break;
+                    default: 
+                        provider = null;
                 }
-            });
-        }
 
+                if (provider) {
+                    firebase.auth().signInWithPopup(provider).then(function(result) {
+                        // This gives you a Google Access Token. You can use it to access the Google API.
+                        that.user = result.user;
+                        that.user.token = result.credential.accessToken;
+
+                    }).catch(function(error) {
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        var email = error.email;
+                        var credential = error.credential;
+
+                        if (errorCode === 'auth/account-exists-with-different-credential') {
+                            alert('You have already signed up with a different auth provider for that email.');
+                        } else {
+                            console.error(error);
+                        }
+                    });
+                } else {
+                    var email = document.getElementById('email').value;
+                    var password = document.getElementById('password').value;
+
+                    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                    
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+
+                        if (errorCode === 'auth/wrong-password') {
+                            console.log('Wrong password.');
+                        } else {
+                            console.log(errorMessage);
+                        }
+                        console.log(error);
+                    });
+                }
+                return true;
+            }
+            return false;
+        }
     };
-  
-}();
+    utils.initialize();
+    return utils;
+};

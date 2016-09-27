@@ -10,10 +10,11 @@ angular.module('unisys.onboarding',
   'angularMoment',
   'unisys.onboarding.controllers',
   'unisys.onboarding.constants',
-  'unisys.onboarding.templates'
+  'unisys.onboarding.templates',
+  'unisys.onboarding.loginUtils'
   ])
 
-.run(['$ionicPlatform', function($ionicPlatform) {
+.run(['$ionicPlatform', '$rootScope', '$state', 'loginUtils', function($ionicPlatform, $rootScope, $state, loginUtils) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -26,6 +27,22 @@ angular.module('unisys.onboarding',
       StatusBar.styleDefault();
     }
   });
+
+  $rootScope.$on("$routeChangeError", function (event, current, previous, rejection) {
+    if (rejection == 'NOT_AUTHORIZED') {
+        $location.path('/login');
+    } else {
+      $state.go($state.current.name);
+    }
+  });
+
+  // $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+  //   if (!loginUtils.isUserValid() && toState.authorization) {
+  //       $state.go('app.login');
+  //   } else {
+  //     $state.go($state.current.name);
+  //   }
+  // });
 }])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
   
@@ -38,6 +55,17 @@ angular.module('unisys.onboarding',
         controller: 'MenuCtrl as vm',
         templateUrl: 'menu/menu.html'
       }
+    },
+    resolve: {
+      userAuthenticated: ["$http", "$q", function ($http, $q) {
+        var deferred = $q.defer();
+            if(firebase.auth().currentUser) {
+                deferred.resolve();
+            } else {
+                deferred.reject('NOT_AUTHORIZED');
+            }
+            return deferred.promise;
+        }]
     }
   })
   .state('app.road', {
@@ -47,6 +75,17 @@ angular.module('unisys.onboarding',
         controller: 'RoadCtrl as vm',
         templateUrl: 'road/road.html'
       }
+    },
+    resolve: {
+      userAuthenticated: ["$http", "$q", function ($http, $q) {
+        var deferred = $q.defer();
+            if(firebase.auth().currentUser) {
+                deferred.resolve();
+            } else {
+                deferred.reject('NOT_AUTHORIZED');
+            }
+            return deferred.promise;
+        }]
     }
   })  
   .state('app.landing', {
@@ -56,8 +95,18 @@ angular.module('unisys.onboarding',
         controller: 'LandingCtrl as vm',
         templateUrl: 'landing/landing.html'
       }
+    },
+    resolve: {
+      userAuthenticated: ["$http", "$q", function ($http, $q) {
+        var deferred = $q.defer();
+            if(firebase.auth().currentUser) {
+                deferred.resolve();
+            } else {
+                deferred.reject('NOT_AUTHORIZED');
+            }
+            return deferred.promise;
+        }]
     }
-
   })
   .state('app.login', {
     url: '/login',
@@ -69,10 +118,6 @@ angular.module('unisys.onboarding',
     }
   });
 
-  if (localStorage.length <= 0) {
-    $urlRouterProvider.otherwise('/road-rate/login');
-  } else {
-    $urlRouterProvider.otherwise('/road-rate/landing');
-  }
+  $urlRouterProvider.otherwise('/road-rate/landing');
 
 }]);

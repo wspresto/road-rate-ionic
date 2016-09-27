@@ -9,8 +9,13 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" />
                 <button class="login-btn" type="button">Login</button>
+                <button ng-click="signout()" class="logout-btn" type="buton">Logout</button>
             </form>
-            <a href="" ng-click="showNewUserForm()">New user?</a>
+            <div class="text-center">
+                <button ng-click="showNewUserForm()">Email</button>
+                <button ng-click="toggleLogin('google')">Google</button>
+                <button ng-click="toggleLogin('github')">Github</button>
+            </div>
         </div>
     </ion-content>
 </ion-view>
