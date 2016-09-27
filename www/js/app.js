@@ -35,14 +35,6 @@ angular.module('unisys.onboarding',
       $state.go($state.current.name);
     }
   });
-
-  // $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-  //   if (!loginUtils.isUserValid() && toState.authorization) {
-  //       $state.go('app.login');
-  //   } else {
-  //     $state.go($state.current.name);
-  //   }
-  // });
 }])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
   

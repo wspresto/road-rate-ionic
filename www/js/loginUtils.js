@@ -24,7 +24,7 @@ function loginUtils () {
             this.user = {};
         },
         isUserValid: firebase.auth().onAuthStateChanged(function () {
-            if (this.user) {
+            if (firebase.auth().currentUser) {
                 return true;
             } else {
                 return false;
