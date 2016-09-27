@@ -13,7 +13,12 @@ module.exports = {
     ngDocs: './docs/'
   },
   constants: {
-    USER: 'user1'
+    USER: 'user1',
+    GOOGLE_API_KEY: 'AIzaSyA3Ydfsl4tqTyxG1m3ANowCScn4zXFZFs0',
+    GOOGLE_API_URLS: {
+      GEOCODING: 'https://maps.googleapis.com/maps/api/geocode/json',
+      DIRECTIONS: 'https://maps.googleapis.com/maps/api/directions/json'
+    }
   },
   globs: {
     sass: ['+(js|css)/**/!(variables).scss'],
