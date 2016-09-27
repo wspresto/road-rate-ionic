@@ -13,13 +13,14 @@ angular.module('unisys.onboarding',
   'unisys.onboarding.controllers',
   'unisys.onboarding.constants',
   'unisys.onboarding.templates',
+
   'unisys.onboarding.loginUtils',
 
-  'unisys.onboarding.directives'
-
+  'unisys.onboarding.directives',
+  'unisys.onboarding.services'
   ])
 
-.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'loginUtils', function($q, $ionicPlatform, $rootScope, $state, loginUtils) {
+.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'loginUtils', ,'esriService', function($q, $ionicPlatform, $rootScope, $state, loginUtils, esriService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -31,6 +32,9 @@ angular.module('unisys.onboarding',
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+  });    
+  esriService.loadModule('esri/config').then(function (esriConfig) {
+    esriConfig.defaults.geometryService = "http://www.example.com/arcgis/rest/services/Utilities/Geometry/GeometryServer";
   });
 
   $rootScope.$on('$stateChangeSuccess', function() {
