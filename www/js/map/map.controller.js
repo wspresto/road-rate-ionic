@@ -1,9 +1,9 @@
 angular.module('unisys.onboarding.road')
 .controller('RoadCtrl', RoadCtrl);
 
-RoadCtrl.$inject = ['$scope', '$ionicActionSheet', 'esriRegistry', '$timeout', 'esriService'];
+RoadCtrl.$inject = ['$scope', '$ionicActionSheet', 'esriRegistry', '$timeout', 'esriService', 'googleMapsService', 'MOCK'];
 
-function RoadCtrl ($scope, $ionicActionSheet, esriRegistry, $timeout, esriService) {
+function RoadCtrl ($scope, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK) {
     var vm = this;
     vm.downVote = downVote;
     vm.upVote = upVote;
@@ -11,18 +11,19 @@ function RoadCtrl ($scope, $ionicActionSheet, esriRegistry, $timeout, esriServic
     vm.map = {
         options: {
             basemap: 'streets',
-            center: [-77.351302, 38.954555],
-            zoom: 13,
+            center: [MOCK.LONGITUDE, MOCK.LATITUDE],
+            zoom: 18,
             sliderStyle: 'small',
             logo: false
         }
     };
     vm.road = {
-        name: 'US - 267',
-        summary: 'You hate this road',
-        likes: 4,
-        hates: 28
+        short_name: 'Discovering Road..',
     };
+    vm.postal = {
+        long_name: ''
+    }
+
     init();
     function downVote () {
         var close = $ionicActionSheet.show({     
@@ -35,7 +36,6 @@ function RoadCtrl ($scope, $ionicActionSheet, esriRegistry, $timeout, esriServic
             titleText: 'You hate this road.',
         });
         $timeout(close, vm.voteConfirmationDelay); 
-
     }
 
     function init () {
@@ -45,20 +45,9 @@ function RoadCtrl ($scope, $ionicActionSheet, esriRegistry, $timeout, esriServic
                 map.hideZoomSlider();
                 map.disableScrollWheelZoom();
             });
-            esriService.loadModule('esri/geometry/Point').then(function (Point) {
-                esriService.loadModule('esri/SpatialReference').then(function (SpatialReference) {
-                    esriService.loadModule('esri/dijit/Search').then(function (Search) {
-                        var SearchService = new Search({
-                            map: map,
-                        }, "blank");
-                        var pt = new Point(-77.351302, 38.954555, new SpatialReference({
-                            wkid: 4326
-                        }));
-                        SearchService.search([-77.351168, 38.951265]).then(function(response){
-                            console.log(response); 
-                        });
-                    });
-                });            
+            googleMapsService.discoverRoad(MOCK.LATITUDE, MOCK.LONGITUDE).then(function (details) {
+                vm.road = details.road;
+                vm.postal = details.postal;
             });
         });
 

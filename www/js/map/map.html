@@ -1,7 +1,7 @@
 <ion-view view-title="Road">
     <ion-content>
         <esri-map on-swipe-right="vm.downVote()" on-swipe-left="vm.upVote()" id="road-map" register-as="roadMap" map-options="vm.map.options"></esri-map>
-        <text-cloud left="10px" bottom="30px"><h2>{{vm.road.name}}</h2><p>{{vm.road.summary}}</p><p>{{vm.road.hates}} dislikes / {{vm.road.likes}} likes</p></text-cloud>
+        <text-cloud left="10px" bottom="30px"><h2>{{vm.road.short_name}}</h2><p>You hate this road.</p><p>90 dislikes / 7 likes</p></text-cloud>
         <div id="location-cursor">
             <div class="dot"></div>
             <div class="pulse"></div>
