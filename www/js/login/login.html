@@ -2,17 +2,34 @@
     <ion-content>
         <div class="card login">
             <h1 class="login-header">Welcome to the Road Rate App!</h1>
-            <form>
-                <legend>Please login</legend>
-                <label for="username">Username</label>
-                <input type="text" id="username" />
-                <label for="password">Password</label>
-                <input type="password" id="password" />
-                <button class="login-btn" type="button">Login</button>
-                <button ng-click="signout()" class="logout-btn" type="buton">Logout</button>
+            <form ng-model="toggleRegistrationForm" ng-init="toggleRegistrationForm={toggle: false}">
+                <div class="container">
+                    <legend>Please login</legend>
+                    <label for="email">Email</label>
+                    <input type="text" id="email" class="form-control" placeholder="john.doe@gmail.com" 
+                        data-example="john.doe@email.com" data-validation-required-message="Please enter your email address." required/>
+                    <p class="help-block text-danger"></p>
+                    <label for="confirm-email" ng-if="toggleRegistrationForm.toggle">Confirm Email</label>
+                    <input type="text" ng-if="toggleRegistrationForm.toggle" id="confirm-email" class="form-control" placeholder="john.doe@gmail.com" 
+                        data-example="john.doe@email.com" data-validation-required-message="Please enter your email address." ng-required="toggleRegistragionForm.toggle" />
+                    <label for="password">Password</label>
+                    <p class="help-block text-danger"></p>
+                    <input type="password" id="password" class="form-control" placeholder="Password123!" 
+                        data-example="Password123!" data-validation-required-message="Please enter your password." required />
+                    <p class="help-block text-danger"></p>
+                    <label for="confirm-password" ng-if="toggleRegistrationForm.toggle">Confirm Password</label>
+                    <input type="password" ng-if="toggleRegistrationForm.toggle" id="confirm-password" class="form-control" placeholder="Password123!" 
+                        data-example="Password123!" data-validation-required-message="Please enter your password." ng-required="toggleRegistragionForm.toggle" />
+                    <p class="help-block text-danger"></p>
+                </div>
+                
+                <button ng-click="toggleSignUp($event)">Register</button>
+
+                <div class="container">
+                    <button ng-click="toggleLogin(null, toggleRegistrationForm.toggle)" class="login-btn" type="button">Login</button>
+                </div>
             </form>
             <div class="text-center">
-                <button ng-click="showNewUserForm()">Email</button>
                 <button ng-click="toggleLogin('google')">Google</button>
                 <button ng-click="toggleLogin('github')">Github</button>
             </div>
