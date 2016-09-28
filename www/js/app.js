@@ -28,7 +28,7 @@ angular.module('unisys.onboarding',
     }
   });
 
-  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+  $rootScope.$on('$stateChangeSuccess', function() {
     firebase.auth().onAuthStateChanged(function (user) {
       if (!firebase.auth().currentUser) {
           $state.go('app.login');
@@ -60,17 +60,6 @@ angular.module('unisys.onboarding',
         controller: 'RoadCtrl as vm',
         templateUrl: 'road/road.html'
       }
-    },
-    resolve: {
-      userAuthenticated: ["$http", "$q", function ($http, $q) {
-        var deferred = $q.defer();
-            if(firebase.auth().currentUser) {
-                deferred.resolve();
-            } else {
-                deferred.reject('NOT_AUTHORIZED');
-            }
-            return deferred.promise;
-        }]
     }
   })  
   .state('app.landing', {
@@ -80,17 +69,6 @@ angular.module('unisys.onboarding',
         controller: 'LandingCtrl as vm',
         templateUrl: 'landing/landing.html'
       }
-    },
-    resolve: {
-      userAuthenticated: ["$http", "$q", function ($http, $q) {
-        var deferred = $q.defer();
-            if(firebase.auth().currentUser) {
-                deferred.resolve();
-            } else {
-                deferred.reject('NOT_AUTHORIZED');
-            }
-            return deferred.promise;
-        }]
     }
   })
   .state('app.login', {
