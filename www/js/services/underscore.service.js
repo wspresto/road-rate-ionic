@@ -1,5 +1,5 @@
 angular.module('unisys.onboarding.services')
-.provider('_', underscore);
+.factory('_', underscore);
 
 underscore.$inject = [];
 function underscore () {

@@ -18,6 +18,10 @@ module.exports = {
     GOOGLE_API_URLS: {
       GEOCODING: 'https://maps.googleapis.com/maps/api/geocode/json',
       DIRECTIONS: 'https://maps.googleapis.com/maps/api/directions/json'
+    },
+    MOCK: {
+      LATITUDE: '38.954555',
+      LONGITUDE: '-77.351302'
     }
   },
   globs: {

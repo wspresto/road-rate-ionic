@@ -29,9 +29,7 @@ angular.module('unisys.onboarding',
       StatusBar.styleDefault();
     }
   });    
-  esriService.loadModule('esri/config').then(function (esriConfig) {
-    esriConfig.defaults.geometryService = "http://www.example.com/arcgis/rest/services/Utilities/Geometry/GeometryServer";
-  });
+
 }])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
