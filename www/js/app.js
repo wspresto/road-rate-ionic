@@ -14,7 +14,7 @@ angular.module('unisys.onboarding',
   'unisys.onboarding.loginUtils'
   ])
 
-.run(['$ionicPlatform', '$rootScope', '$state', 'loginUtils', function($ionicPlatform, $rootScope, $state, loginUtils) {
+.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'loginUtils', function($q, $ionicPlatform, $rootScope, $state, loginUtils) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -28,12 +28,16 @@ angular.module('unisys.onboarding',
     }
   });
 
-  $rootScope.$on("$routeChangeError", function (event, current, previous, rejection) {
-    if (rejection == 'NOT_AUTHORIZED') {
-        $location.path('/login');
-    } else {
-      $state.go($state.current.name);
-    }
+  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (!firebase.auth().currentUser) {
+          $state.go('app.login');
+      } else if (firebase.auth().currentUser && $state.current.name !== 'app.login') {
+        $state.go($state.current.name);
+      } else {
+        $state.go('app.landing');
+      }
+    });
   });
 }])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
@@ -47,17 +51,6 @@ angular.module('unisys.onboarding',
         controller: 'MenuCtrl as vm',
         templateUrl: 'menu/menu.html'
       }
-    },
-    resolve: {
-      userAuthenticated: ["$http", "$q", function ($http, $q) {
-        var deferred = $q.defer();
-            if(firebase.auth().currentUser) {
-                deferred.resolve();
-            } else {
-                deferred.reject('NOT_AUTHORIZED');
-            }
-            return deferred.promise;
-        }]
     }
   })
   .state('app.road', {

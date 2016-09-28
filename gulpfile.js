@@ -55,7 +55,7 @@ function buildJS () {
   return merge(ng, constants)
     .pipe(iife())
     .pipe(concat('app.js'))
-    .pipe(gulpif(!args.dev, uglify()))
+    //.pipe(gulpif(!args.dev, uglify()))
     .pipe(gulp.dest(config.build));
 }
 function buildSASS () {
