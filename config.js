@@ -31,10 +31,10 @@ module.exports = {
     assets: ['assets/**/*']
   },
   fonts: [
-    'cbp-theme/dist/fonts/*.*'
+
   ],
   cssLibs: [
-    'cbp-theme/dist/styles/cbp-theme.css'
+
   ],
   libs: [
         'underscore/underscore.js',

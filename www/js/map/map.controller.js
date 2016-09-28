@@ -45,10 +45,12 @@ function RoadCtrl ($scope, $ionicActionSheet, esriRegistry, $timeout, esriServic
                 map.hideZoomSlider();
                 map.disableScrollWheelZoom();
             });
+            /*
             googleMapsService.discoverRoad(MOCK.LATITUDE, MOCK.LONGITUDE).then(function (details) {
                 vm.road = details.road;
                 vm.postal = details.postal;
             });
+            */
         });
 
     }    
