@@ -7,6 +7,7 @@
 angular.module('unisys.onboarding',
  [
   'ionic',
+  'ngCordova',
   'angularMoment',
   'esri.map',
   'esri.core',
