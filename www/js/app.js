@@ -21,7 +21,7 @@ angular.module('unisys.onboarding',
   'unisys.onboarding.services'
   ])
 
-.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'loginUtils', ,'esriService', function($q, $ionicPlatform, $rootScope, $state, loginUtils, esriService) {
+.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'loginUtils', 'esriService', function($q, $ionicPlatform, $rootScope, $state, loginUtils, esriService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
