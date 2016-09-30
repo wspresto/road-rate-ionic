@@ -7,7 +7,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     var vm = this;
     var zoomLevel = 18;    
     var voteConfirmationDelay = 5 * 1000;
-    var gpsPollingRate =  30 * 1000;
+    var gpsPollingRate =  45 * 1000;
     var gpsPollingThread = null;
     vm.downVote = downVote;
     vm.upVote = upVote;
@@ -79,7 +79,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
 
 
                     //setup gps polling
-
+                    pollGPS();
                     gpsPollingThread = $interval(function () {
                         console.log('polling gps...'); //TESTING!!!
                         pollGPS();
