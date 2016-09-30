@@ -1,9 +1,9 @@
 angular.module('unisys.onboarding.road')
 .controller('RoadCtrl', RoadCtrl);
 
-RoadCtrl.$inject = ['$scope', '$ionicPlatform', '$ionicActionSheet', 'esriRegistry', '$timeout', 'esriService', 'googleMapsService', 'MOCK', '$cordovaGeolocation', '$interval'];
+RoadCtrl.$inject = ['$scope', '$ionicPlatform', '$ionicActionSheet', 'esriRegistry', '$timeout', 'esriService', 'googleMapsService', 'MOCK', '$cordovaGeolocation', '$interval', 'loginUtils'];
 
-function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK, $cordovaGeolocation, $interval) {
+function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK, $cordovaGeolocation, $interval, loginUtils) {
     var vm = this;
     var zoomLevel = 18;    
     var voteConfirmationDelay = 5 * 1000;
@@ -28,7 +28,6 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     vm.postal = {
         long_name: ''
     }
-
     init();
     function downVote () {
         var close = $ionicActionSheet.show({     
@@ -42,7 +41,6 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         });
         $timeout(close, voteConfirmationDelay); 
     }
-
     function pollGPS () {
        $cordovaGeolocation.getCurrentPosition({
             enableHighAccuracy: false,
@@ -58,10 +56,10 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
             });
         }, function (err) {
             console.log('gps geolocation error..');
-
         });
     }
     function init () {
+        /*
         $ionicPlatform.ready(function() {
             esriRegistry.get('roadMap').then(function (map) {
                 map.on("load", function() {
@@ -70,14 +68,11 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     map.disableShiftDoubleClickZoom();
                     map.disableClickRecenter();
                     map.disableDoubleClickZoom();
-
                     map.disableScrollWheelZoom();      
                     map.disableSnapping();              
                     map.disablePan();
                     map.disableMapNavigation();                    
                     map.hideZoomSlider();
-
-
                     //setup gps polling
                     pollGPS();
                     gpsPollingThread = $interval(function () {
@@ -87,9 +82,11 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
 
                 });
             });            
-
-        });        
-
-
+        });    
+        */    
+        var db_roads = firebase.database().ref().child('roads');
+        db_roads.orderByChild('short_name').equalTo('I - 95').on('value', function(road) {
+            console.log(road.val()[0]); //TESTING!!!
+        });
     }    
 }
