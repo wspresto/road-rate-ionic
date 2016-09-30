@@ -23,4 +23,5 @@ function LoginCtrl ($scope, loginUtils) {
             $event.currentTarget.innerHTML = 'Cancel';
         }
     }
+
 }

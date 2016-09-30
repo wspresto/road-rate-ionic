@@ -58,6 +58,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
             });
         }, function (err) {
             console.log('gps geolocation error..');
+
         });
     }
     function init () {
@@ -75,6 +76,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     map.disablePan();
                     map.disableMapNavigation();                    
                     map.hideZoomSlider();
+
 
                     //setup gps polling
 
