@@ -30,13 +30,15 @@ angular.module('unisys.onboarding',
 
   $rootScope.$on('$stateChangeSuccess', function() {
     firebase.auth().onAuthStateChanged(function (user) {
-      if (!firebase.auth().currentUser) {
+      if (!user) {
           $state.go('app.login');
-      } else if (firebase.auth().currentUser && $state.current.name !== 'app.login') {
+          
+      } else if (user && $state.current.name !== 'app.login') {
         $state.go($state.current.name);
       } else {
         $state.go('app.landing');
       }
+      loginUtils.setUser(user);
     });
   });
 }])

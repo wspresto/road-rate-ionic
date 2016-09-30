@@ -20,25 +20,24 @@ function loginUtils () {
                 google: new firebase.auth.GoogleAuthProvider(),
                 github: new firebase.auth.GithubAuthProvider()
             };
-            this.user = {};
+            this.user = null;
         },
-        isUserValid: firebase.auth().onAuthStateChanged(function () {
-            if (firebase.auth().currentUser) {
-                return true;
-            } else {
-                return false;
-            }
-        }),
+        setUser: function (user) {
+            this.user = user;
+        },
+        clearUser: function () {
+            this.user = null;
+        },
         signout: function () {
             firebase.auth().signOut();
-            this.user = {};
+            this.clearUser();
         },
         toggleLogin: function (chosenProvider, toggleRegisterationForm) {
             var that = this;
             
             chosenProvider = chosenProvider || null;
             
-            if (!firebase.auth().currentUser) {
+            if (!this.user) {
 
                 if (chosenProvider){
                     var provider = this.providers[chosenProvider];
