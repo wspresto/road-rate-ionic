@@ -1,9 +1,9 @@
 angular.module('unisys.onboarding.road')
 .controller('RoadCtrl', RoadCtrl);
 
-RoadCtrl.$inject = ['$scope', '$ionicPlatform', '$ionicActionSheet', 'esriRegistry', '$timeout', 'esriService', 'googleMapsService', 'MOCK', '$cordovaGeolocation', '$interval', 'loginUtils'];
+RoadCtrl.$inject = ['$scope', '$ionicPlatform', '$ionicActionSheet', 'esriRegistry', '$timeout', 'esriService', 'googleMapsService', 'MOCK', '$cordovaGeolocation', '$interval', 'loginUtils', '$q'];
 
-function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK, $cordovaGeolocation, $interval, loginUtils) {
+function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK, $cordovaGeolocation, $interval, loginUtils, $q) {
     var vm = this;
     var zoomLevel = 18;    
     var voteConfirmationDelay = 5 * 1000;
@@ -23,26 +23,43 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         }
     };
     vm.road = {
-        short_name: 'Discovering Road..'
+        name: 'Discovering Road..',
+        postal: '',
+        dislikes: 0,
+        likes: 0
     };
-    vm.postal = {
-        long_name: ''
-    }
+
     init();
+    function getRoadFireBase (path) {
+        return firebase.database().ref().child('roads/' + path);
+    }
     function downVote () {
+        var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
+        roadNode.on('value', function(road) {
+            roadNode.update({
+                dislikes: road.val().dislikes + 1
+            });
+        });
         var close = $ionicActionSheet.show({     
             titleText: 'You like this road.',
         });
         $timeout(close, voteConfirmationDelay); 
     }
     function upVote () {
+        var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);        
+        roadNode.on('value', function(road) {
+            roadNode.update({
+                likes: road.val().likes + 1
+            });
+        });        
         var close = $ionicActionSheet.show({    
             titleText: 'You hate this road.',
         });
         $timeout(close, voteConfirmationDelay); 
     }
     function pollGPS () {
-       $cordovaGeolocation.getCurrentPosition({
+        var cb = $q.defer();
+        $cordovaGeolocation.getCurrentPosition({
             enableHighAccuracy: false,
             timeout: 3000
         }).then( function updateLocation (position) {
@@ -51,15 +68,23 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 $timeout(function () {vm.map.controller.centerAndZoom(pt, zoomLevel)}, 0); //do not run during $digest
             });
             googleMapsService.discoverRoad(position.coords.latitude, position.coords.longitude).then(function (details) {
-                vm.road = details.road;
-                vm.postal = details.postal;
+                cb.resolve(details);
             });
         }, function (err) {
             console.log('gps geolocation error..');
         });
+        return cb.promise;
     }
+    function updateRoadDetails (details) {
+        vm.road.name = details.road.short_name;
+        vm.road.postal = details.postal.short_name;
+        var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
+        roadNode.on('value', function(road) {
+            vm.road.dislikes = road.val().dislikes;
+            vm.road.likes = road.val().likes;
+        });      
+    }    
     function init () {
-        /*
         $ionicPlatform.ready(function() {
             esriRegistry.get('roadMap').then(function (map) {
                 map.on("load", function() {
@@ -74,19 +99,16 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     map.disableMapNavigation();                    
                     map.hideZoomSlider();
                     //setup gps polling
-                    pollGPS();
+                    pollGPS().then(updateRoadDetails);
                     gpsPollingThread = $interval(function () {
                         console.log('polling gps...'); //TESTING!!!
-                        pollGPS();
+                        pollGPS().then(updateRoadDetails);
                     }, gpsPollingRate);
 
                 });
             });            
         });    
-        */    
-        var db_roads = firebase.database().ref().child('roads');
-        db_roads.orderByChild('short_name').equalTo('I - 95').on('value', function(road) {
-            console.log(road.val()[0]); //TESTING!!!
-        });
+ 
+
     }    
 }
