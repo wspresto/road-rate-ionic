@@ -1,9 +1,9 @@
-angular.module('unisys.onboarding.loginUtils', [])
-    .factory('loginUtils', loginUtils);
+angular.module('unisys.onboarding.firebase.service', [])
+    .factory('firebaseService', firebaseService);
 
-    loginUtils.$inject = [];
+    firebaseService.$inject = [];
 
-function loginUtils () {
+function firebaseService () {
 
     var config = {
         apiKey: "AIzaSyDRaQNaGdU0RZNXZEAciKlL2xtmSfMM-_M",

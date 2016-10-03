@@ -1,17 +1,13 @@
 angular.module('unisys.onboarding.login')
     .controller('LoginCtrl', LoginCtrl);
 
-LoginCtrl.$inject = ['$scope', 'loginUtils'];
+LoginCtrl.$inject = ['$scope', 'firebaseService'];
 
-function LoginCtrl ($scope, loginUtils) {
+function LoginCtrl ($scope, firebaseService) {
     var vm = this;
     
     $scope.toggleLogin = function (chosenProvider, toggleRegistrationForm) {
-        loginUtils.toggleLogin(chosenProvider, toggleRegistrationForm);
-    }
-
-    $scope.signout = function (chosenProvider) {
-        loginUtils.signout(chosenProvider);
+        firebaseService.toggleLogin(chosenProvider, toggleRegistrationForm);
     }
 
     $scope.toggleSignUp = function ($event) {

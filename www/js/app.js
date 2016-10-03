@@ -11,10 +11,10 @@ angular.module('unisys.onboarding',
   'unisys.onboarding.controllers',
   'unisys.onboarding.constants',
   'unisys.onboarding.templates',
-  'unisys.onboarding.loginUtils'
+  'unisys.onboarding.firebase.service'
   ])
 
-.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'loginUtils', function($q, $ionicPlatform, $rootScope, $state, loginUtils) {
+.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'firebaseService', function($q, $ionicPlatform, $rootScope, $state, firebaseService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -38,7 +38,7 @@ angular.module('unisys.onboarding',
       } else {
         $state.go('app.landing');
       }
-      loginUtils.setUser(user);
+      firebaseService.setUser(user);
     });
   });
 }])

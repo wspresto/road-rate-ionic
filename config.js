@@ -31,6 +31,6 @@ module.exports = {
         'underscore/underscore.js',
         'moment/moment.js',
         'angular-moment/angular-moment.js',
-        'login-utils'
+        'firebase/firebase.js'
         ]   
 };
