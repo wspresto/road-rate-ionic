@@ -13,7 +13,16 @@ module.exports = {
     ngDocs: './docs/'
   },
   constants: {
-    USER: 'user1'
+    USER: 'user1',
+    GOOGLE_API_KEY: 'AIzaSyA3Ydfsl4tqTyxG1m3ANowCScn4zXFZFs0',
+    GOOGLE_API_URLS: {
+      GEOCODING: 'https://maps.googleapis.com/maps/api/geocode/json',
+      DIRECTIONS: 'https://maps.googleapis.com/maps/api/directions/json'
+    },
+    MOCK: {
+      LATITUDE: '38.954555',
+      LONGITUDE: '-77.351302'
+    }
   },
   globs: {
     sass: ['+(js|css)/**/!(variables).scss'],
@@ -22,15 +31,17 @@ module.exports = {
     assets: ['assets/**/*']
   },
   fonts: [
-    'cbp-theme/dist/fonts/*.*'
+
   ],
   cssLibs: [
-    'cbp-theme/dist/styles/cbp-theme.css'
+
   ],
   libs: [
         'underscore/underscore.js',
         'moment/moment.js',
         'angular-moment/angular-moment.js',
-        'firebase/firebase.js'
+        'firebase/firebase.js',
+        'angular-esri-map/dist/angular-esri-core.js',
+        'angular-esri-map/dist/angular-esri-map.js'   
         ]   
 };

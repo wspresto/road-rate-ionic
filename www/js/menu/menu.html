@@ -1,5 +1,5 @@
 <ion-side-menus enable-menu-with-back-views="false" ng-model="menu">
-  <ion-side-menu-content data-if="model.isLoggedIn">
+  <ion-side-menu-content data-if="model.isLoggedIn" drag-content="false">
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button>
       </ion-nav-back-button>
@@ -25,6 +25,9 @@
         <ion-item menu-close ng-click="signout()" ui-sref="app.login">
           Logout
         </ion-item>
+        <ion-item menu-close ui-sref="app.road">
+          Road
+        </ion-item>        
       </ion-list>
     </ion-content>
   </ion-side-menu>

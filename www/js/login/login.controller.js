@@ -19,4 +19,5 @@ function LoginCtrl ($scope, firebaseService) {
             $event.currentTarget.innerHTML = 'Cancel';
         }
     }
+
 }

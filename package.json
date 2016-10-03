@@ -3,6 +3,7 @@
   "version": "1.1.1",
   "description": "road-rate-ionic: An Ionic project",
   "dependencies": {
+    "angular-esri-map": "1.1.6",
     "angular-moment": "^1.0.0-beta.6",
     "cbp-theme": "^0.3.2",
     "del": "2.2.0",
