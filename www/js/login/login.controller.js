@@ -1,11 +1,16 @@
 angular.module('unisys.onboarding.login')
     .controller('LoginCtrl', LoginCtrl);
 
-LoginCtrl.$inject = ['$scope', 'firebaseService'];
+LoginCtrl.$inject = ['$scope', '$ionicHistory', 'firebaseService'];
 
-function LoginCtrl ($scope, firebaseService) {
+function LoginCtrl ($scope, $ionicHistory, firebaseService) {
     var vm = this;
     
+    $ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+    });
+
     $scope.toggleLogin = function (chosenProvider, toggleRegistrationForm) {
         firebaseService.toggleLogin(chosenProvider, toggleRegistrationForm);
     }
