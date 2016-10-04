@@ -40,8 +40,7 @@ angular.module('unisys.onboarding',
   $rootScope.$on('$stateChangeSuccess', function() {
     firebase.auth().onAuthStateChanged(function (user) {
       if (!user) {
-          $state.go('app.login');
-          
+        $state.go('app.login');
       } else if (user && $state.current.name !== 'app.login') {
         $state.go($state.current.name);
       } else {
@@ -50,7 +49,6 @@ angular.module('unisys.onboarding',
       firebaseService.setUser(user);
     });
   });
-
 }])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
   

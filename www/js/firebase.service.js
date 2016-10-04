@@ -15,29 +15,29 @@ function firebaseService () {
     firebase.initializeApp(config);
 
     var utils = {
+        user: null,
         initialize: function () {
             this.providers = {
                 google: new firebase.auth.GoogleAuthProvider(),
                 github: new firebase.auth.GithubAuthProvider()
             };
-            this.user = null;
+            utils.user = null;
         },
         setUser: function (user) {
-            this.user = user;
+            utils.user = user;
         },
         clearUser: function () {
-            this.user = null;
+            utils.user = null;
         },
         signout: function () {
             firebase.auth().signOut();
             this.clearUser();
         },
         toggleLogin: function (chosenProvider, toggleRegisterationForm) {
-            var that = this;
             
             chosenProvider = chosenProvider || null;
             
-            if (!this.user) {
+            if (!utils.user) {
 
                 if (chosenProvider){
                     var provider = this.providers[chosenProvider];
@@ -57,8 +57,8 @@ function firebaseService () {
                 if (provider) {
                     firebase.auth().signInWithPopup(provider).then(function(result) {
                         // This gives you a Google Access Token. You can use it to access the Google API.
-                        that.user = result.user;
-                        that.user.token = result.credential.accessToken;
+                        utils.user = result.user;
+                        utils.user.token = result.credential.accessToken;
 
                     }).catch(function(error) {
                         var errorCode = error.code;
