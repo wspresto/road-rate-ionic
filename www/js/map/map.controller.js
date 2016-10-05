@@ -1,9 +1,9 @@
 angular.module('unisys.onboarding.road')
 .controller('RoadCtrl', RoadCtrl);
 
-RoadCtrl.$inject = ['$scope', '$ionicPlatform', '$ionicActionSheet', 'esriRegistry', '$timeout', 'esriService', 'googleMapsService', 'MOCK', '$cordovaGeolocation', '$interval', 'loginUtils', '$q'];
+RoadCtrl.$inject = ['$scope', '$ionicPlatform', '$ionicActionSheet', 'esriRegistry', '$timeout', 'esriService', 'googleMapsService', 'MOCK', '$cordovaGeolocation', '$interval', '$q', 'firebaseService'];
 
-function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK, $cordovaGeolocation, $interval, loginUtils, $q) {
+function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK, $cordovaGeolocation, $interval, $q, firebaseService) {
     var vm = this;
     var zoomLevel = 18;    
     var voteConfirmationDelay = 5 * 1000;
@@ -32,7 +32,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
 
     init();
     function getUID () {
-        return 'RtglCmnWXJVmaGlIGHikMy9Vz612';
+        return firebaseService.user.uid;
     }
     function getRoadFireBase (path) {
         return firebase.database().ref().child('roads/' + path);
@@ -122,7 +122,6 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         });
         return cb.promise;
     }
-    
     function updateRoadDetails (details) {
         vm.road.name = details.road.short_name;
         vm.road.postal = details.postal.short_name;
@@ -141,9 +140,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                             vm.road.opinon = 'You like this road.'
                         }
                     });                
-
                 }, 0);
-
             } else {
                 vm.road.dislikes = 0;
                 vm.road.likes = 0;
@@ -167,14 +164,10 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     //setup gps polling
                     pollGPS().then(updateRoadDetails);
                     gpsPollingThread = $interval(function () {
-                        console.log('polling gps...'); //TESTING!!!
                         pollGPS().then(updateRoadDetails);
                     }, gpsPollingRate);
-
                 });
             });            
         });    
- 
-
     }    
 }
