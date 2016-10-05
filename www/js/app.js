@@ -81,6 +81,15 @@ angular.module('unisys.onboarding',
       }
     }
   })
+  .state('app.profile', {
+    url: '/profile',
+    views: {
+      'content@app': {
+        controller: 'ProfileCtrl as vm',
+        templateUrl: 'profile/profile.html'
+      }
+    }
+  })
   .state('app.login', {
     url: '/login',
     views: {
