@@ -37,9 +37,12 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     function getRoadFireBase (path) {
         return firebase.database().ref().child('roads/' + path);
     }
+    function getDisplayName () {
+        return 'Will';
+    }
     function downVote () {
         var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
-        var userID = getUID();   
+        var userID = getUID(); 
         var resultText = '';
         roadNode.once('value', function(road) {
             if (road.val()) {
@@ -53,6 +56,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     } else {
                         vm.road.dislikes++;
                         notify('You hate this road!');
+                        pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!');                          
                     }               
                 });
             } else {
@@ -64,13 +68,10 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 roadNode.set(details, function (err) {
                     vm.road.dislikes++;
                     notify('You hate this road!');
+                    pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!');                      
                 });
             }
-            var db = firebase.database().ref().child('activity/users/' + userID);
-            db.push({
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                title: 'You hated ' + vm.road.name + '!'
-            });            
+      
         });
     }
     function upVote () {
@@ -88,6 +89,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     } else {
                         vm.road.likes++;
                         notify('You like this road!');
+                        pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');                        
                     }                       
                 });
             } else {
@@ -99,14 +101,21 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 roadNode.set(details, function (err) {
                     vm.road.likes++;
                     notify('You like this road!');
+                    pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');
                 });
             }
-            var db = firebase.database().ref().child('activity/users/' + userID);
-            db.push({
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                title: 'You liked ' + vm.road.name + '!'
-            });
         });        
+    }
+    function pushToActivityFeed (title) {
+        var userID = getUID();            
+        var path = 'activity/all';
+        var newKey = firebase.database().ref().child(path).push().key;
+        firebase.database().ref(path + '/' + newKey).set({
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            title: title,
+            uid: userID,
+            roadCode: vm.road.name + ':' + vm.road.postal
+        });
     }
     function notify (text) {
         var close = $ionicActionSheet.show({  

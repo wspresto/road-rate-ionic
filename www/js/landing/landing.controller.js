@@ -11,14 +11,11 @@ function LandingCtrl ($scope, $timeout, moment, firebaseService) {
     init();
 
     function init () {
-    var user = firebaseService.user || {
-        uid: 'RtglCmnWXJVmaGlIGHikMy9Vz612'
-    };
-     var db = firebase.database().ref().child('activity/users/' + user.uid);
-     db.on('child_added', function (childNode) {
+     var db = firebase.database().ref().child('activity/all');
+     db.orderByChild('timestamp').on('child_added', function (childNode) {
         $timeout(function () {
             $scope.$apply(function () {         
-                vm.activities.push(childNode.val());
+                vm.activities.unshift(childNode.val());
             });
         }, 0);
      });  
