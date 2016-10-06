@@ -66,6 +66,11 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     notify('You hate this road!');
                 });
             }
+            var db = firebase.database().ref().child('activity/users/' + userID);
+            db.push({
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                title: 'You hated ' + vm.road.name + '!'
+            });            
         });
     }
     function upVote () {
@@ -96,6 +101,11 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     notify('You like this road!');
                 });
             }
+            var db = firebase.database().ref().child('activity/users/' + userID);
+            db.push({
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                title: 'You liked ' + vm.road.name + '!'
+            });
         });        
     }
     function notify (text) {
