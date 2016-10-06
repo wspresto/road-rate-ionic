@@ -26,6 +26,11 @@ function firebaseService () {
         setUser: function (user) {
             utils.user = user;
         },
+        getUser: function () {
+            var callback = $q.deferred();
+
+            return callback.promise;
+        },
         clearUser: function () {
             utils.user = null;
         },
@@ -33,24 +38,32 @@ function firebaseService () {
             firebase.auth().signOut();
             this.clearUser();
         },
-        toggleLogin: function (chosenProvider, toggleRegisterationForm) {
-            
+        setLocalStorageProvider: function (provider) {
+            localStorage.setItem('chosenProvider', JSON.stringify({
+                "provider": provider
+            }));
+        },
+        login: function (chosenProvider, toggleRegisterationForm) {
+            var localStorageProvider = JSON.parse(localStorage.getItem("chosenProvider")) || null;
             chosenProvider = chosenProvider || null;
             
             if (!utils.user) {
 
-                if (chosenProvider){
+                if (chosenProvider && localStorageProvider){
                     var provider = this.providers[chosenProvider];
 
                     switch (provider.providerId) {
                         case "google.com":
                             provider.addScope('https://www.googleapis.com/auth/plus.login');
+                            this.setLocalStorageProvider(provider.providerId);
                             break;
                         case "github.com":
                             provider.addScope('repo');
+                            this.setLocalStorageProvider(provider.providerId);
                             break;
                         default: 
                             provider = null;
+                            this.setLocalStorageProvider(provicer.providerId);
                     }
                 }
 
@@ -75,8 +88,11 @@ function firebaseService () {
                 } else if (!toggleRegisterationForm) {
                     var email = document.getElementById('email').value;
                     var password = document.getElementById('password').value;
+                    var that = this;
 
-                    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                    firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
+                        that.setUser = user;
+                    }).catch(function(error) {
                     
                         var errorCode = error.code;
                         var errorMessage = error.message;
@@ -96,10 +112,13 @@ function firebaseService () {
             return false;
         },
         handleSignUp: function (toggleRegistrationForm) {
+            var fullName = document.getElementById('full-name').value;
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
             var confirmEmail = document.getElementById('confirm-email').value;
             var confirmPassword = document.getElementById('confirm-password').value;
+            var that = this;
+
             if (toggleRegistrationForm) {
                 if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
                     return;
@@ -110,17 +129,22 @@ function firebaseService () {
                 }
             }
 
-            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-                var errorCode = error.code;
-                var errorMessage = error.message;
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(function (user) {
+                    user.fullName = fullName;
+                    that.setUser(user);
+                })
+                .catch(function(error) {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
 
-                if (errorCode == 'auth/weak-password') {
-                    alert('The password is too weak.');
-                } else {
-                    alert(errorMessage);
-                }
-                console.log(error);
-            });
+                    if (errorCode == 'auth/weak-password') {
+                        alert('The password is too weak.');
+                    } else {
+                        alert(errorMessage);
+                    }
+                    console.log(error);
+                });
         },
         sendEmailVerification: function () {
             firebase.auth().currentUser.sendEmailVerification().then(function() {
