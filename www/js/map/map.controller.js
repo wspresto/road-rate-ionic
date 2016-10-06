@@ -11,6 +11,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     var gpsPollingThread = null;
     vm.downVote = downVote;
     vm.upVote = upVote;
+    vm.hasVoted = false;
 
     vm.map = {
         controller: null,
@@ -167,6 +168,10 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         });      
     }    
     function init () {
+        $scope.$watch('vm.road.postal', function () {
+            vm.hasVoted = false;
+            console.log('road has changed!'); //TESTING!!!
+        });
         $ionicPlatform.ready(function() {
             esriRegistry.get('roadMap').then(function (map) {
                 map.on("load", function() {

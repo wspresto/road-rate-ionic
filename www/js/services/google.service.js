@@ -24,7 +24,7 @@ function googleMapsService ($q, $http, GOOGLE_API_URLS, GOOGLE_API_KEY, _) {
     }
     function extractRouteInformation (response) {
         var routeDetails = _.find(response, function (detailObj) {
-            return detailObj.types.indexOf('street_address') > -1;
+            return detailObj.types.indexOf('street_address') > -1 || detailObj.types.indexOf('premise') > -1;
         });
         var roadComponent = _.find(routeDetails.address_components, function (component) {
             return component.types.indexOf('route') > -1;

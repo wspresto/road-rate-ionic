@@ -19,7 +19,5 @@ function LandingCtrl ($scope, $timeout, moment, firebaseService) {
             });
         }, 0);
      });  
-     //var uid = firebaseService.user.uid;
-
     }
 }
