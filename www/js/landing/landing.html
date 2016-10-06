@@ -9,7 +9,7 @@
         <div ng-repeat="activity in vm.activities" class="card">
             <div class="item item-text-wrap">
                 <h2>{{activity.title}}</h2>
-                <p>{{activity.timestamp | amFromUnix |  amParse:'YYYY.MM.DD HH:mm'}}</p>
+                <p>{{activity.timestamp / 1000 | amFromUnix |  amDateFormat:'dddd, MMMM Do YYYY, h:mm a'}}</p>
             </div>
         </div>
 
