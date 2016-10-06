@@ -23,8 +23,7 @@ module.exports = {
       LONGITUDE: '-77.351302'
     },
     FIREBASE: {
-      ROADS_URL: 'https://road-rate.firebaseio.com/roads',
-      USERS_URL: 'https://road-rate.firebaseio.com/users'
+
     }
   },
   globs: {
