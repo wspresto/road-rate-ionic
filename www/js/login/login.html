@@ -6,6 +6,8 @@
             <form ng-model="toggleRegistrationForm" ng-init="toggleRegistrationForm={toggle: false}">
                 <div class="container">
                     <legend>Please login</legend>
+                    <label for="full-name" ng-if="toggleRegistrationForm.toggle">Full Name</label>
+                    <input id="full-name" type="text" ng-if="toggleRegistrationForm.toggle" placeholder="John Doe" />
                     <label for="email">Email</label>
                     <input type="text" id="email" class="form-control" placeholder="john.doe@gmail.com" 
                         data-example="john.doe@email.com" data-validation-required-message="Please enter your email address." required/>
@@ -26,12 +28,12 @@
 
                 <div class="container">
                     <button ng-click="toggleSignUp($event)">Register</button>
-                    <button ng-click="toggleLogin(null, toggleRegistrationForm.toggle)" class="login-btn" type="button">Login</button>
+                    <button ng-click="login(null, toggleRegistrationForm.toggle)" class="login-btn" type="button">Login</button>
                 </div>
             </form>
             <div class="text-center">
-                <button ng-click="toggleLogin('google')">Google</button>
-                <button ng-click="toggleLogin('github')">Github</button>
+                <button ng-click="login('google')">Google</button>
+                <button ng-click="login('github')">Github</button>
             </div>
 
         </div>

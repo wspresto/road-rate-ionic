@@ -5,14 +5,14 @@ LoginCtrl.$inject = ['$scope', '$ionicHistory', 'firebaseService'];
 
 function LoginCtrl ($scope, $ionicHistory, firebaseService) {
     var vm = this;
-    
+
     $ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true
     });
 
-    $scope.toggleLogin = function (chosenProvider, toggleRegistrationForm) {
-        firebaseService.toggleLogin(chosenProvider, toggleRegistrationForm);
+    $scope.login = function (chosenProvider, toggleRegistrationForm) {
+        firebaseService.login(chosenProvider, toggleRegistrationForm);
     }
 
     $scope.toggleSignUp = function ($event) {

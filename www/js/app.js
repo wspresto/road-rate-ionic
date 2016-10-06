@@ -46,7 +46,6 @@ angular.module('unisys.onboarding',
       } else {
         $state.go('app.landing');
       }
-      firebaseService.setUser(user);
     });
   });
 }])
@@ -78,6 +77,15 @@ angular.module('unisys.onboarding',
       'content@app': {
         controller: 'LandingCtrl as vm',
         templateUrl: 'landing/landing.html'
+      }
+    }
+  })
+  .state('app.profile', {
+    url: '/profile',
+    views: {
+      'content@app': {
+        controller: 'ProfileCtrl as vm',
+        templateUrl: 'profile/profile.html'
       }
     }
   })
