@@ -11,7 +11,10 @@ function LandingCtrl ($scope, $timeout, moment, firebaseService) {
     init();
 
     function init () {
-     var db = firebase.database().ref().child('activity/users/RtglCmnWXJVmaGlIGHikMy9Vz612');
+    var user = firebaseService.user || {
+        uid: 'RtglCmnWXJVmaGlIGHikMy9Vz612'
+    };
+     var db = firebase.database().ref().child('activity/users/' + user.uid);
      db.on('child_added', function (childNode) {
         $timeout(function () {
             $scope.$apply(function () {         
