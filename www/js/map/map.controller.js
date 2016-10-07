@@ -11,8 +11,6 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     var gpsPollingThread = null;
     vm.downVote = downVote;
     vm.upVote = upVote;
-    vm.hasVoted = false;
-
     vm.map = {
         controller: null,
         options: {
@@ -30,7 +28,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         likes: 0,
         opinion: 'You have not rated this road before.'
     };
-
+    
     init();
     function getUID () {
         return firebaseService.user.uid;
@@ -67,12 +65,15 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 };
                 details[userID] = firebase.database.ServerValue.TIMESTAMP;                
                 roadNode.set(details, function (err) {
-                    vm.road.dislikes++;
-                    notify('You hate this road!');
-                    pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!');                      
+                    if (err) {
+                        notify('You can only vote once per day.');
+                    } else {
+                        vm.road.dislikes++;
+                        notify('You hate this road!');
+                        pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!');                                 
+                    }
                 });
             }
-      
         });
     }
     function upVote () {
@@ -100,9 +101,13 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 };
                 details[userID] = firebase.database.ServerValue.TIMESTAMP;
                 roadNode.set(details, function (err) {
-                    vm.road.likes++;
-                    notify('You like this road!');
-                    pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');
+                    if (err) {
+                        notify('You can only vote on this road once per day.');
+                    } else {
+                        vm.road.likes++;
+                        notify('You like this road!');
+                        pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');
+                    }
                 });
             }
         });        
@@ -168,10 +173,6 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         });      
     }    
     function init () {
-        $scope.$watch('vm.road.postal', function () {
-            vm.hasVoted = false;
-            console.log('road has changed!'); //TESTING!!!
-        });
         $ionicPlatform.ready(function() {
             esriRegistry.get('roadMap').then(function (map) {
                 map.on("load", function() {

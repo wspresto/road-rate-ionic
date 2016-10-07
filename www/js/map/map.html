@@ -4,11 +4,11 @@
         <text-cloud left="10px" bottom="30px">
             <h2>{{vm.road.name}}</h2>
             <div class="button-bar">
-                <button ng-click="vm.hasVoted = true; vm.upVote()" class="button button-balanced">Like</button>
-                <button ng-click="vm.hasVoted = true; vm.downVote()" class="button button-assertive">Hate</button>
+                <button ng-click="vm.upVote()" class="button button-balanced">Like</button>
+                <button ng-click="vm.downVote()" class="button button-assertive">Hate</button>
             </div>
-            <p ng-if="vm.hasVoted" >{{vm.road.opinion}}</p>            
-            <p ng-if="vm.hasVoted">{{vm.road.dislikes}} dislikes / {{vm.road.likes}} likes</p>
+            <p>{{vm.road.opinion}}</p>            
+            <p>{{vm.road.dislikes}} dislikes / {{vm.road.likes}} likes</p>
         </text-cloud>
         <div id="location-cursor">
             <div class="dot"></div>
