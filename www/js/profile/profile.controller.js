@@ -5,4 +5,7 @@ ProfileCtrl.$inject = ['$scope', 'firebaseService'];
 
 function ProfileCtrl ($scope, firebaseService) {
     var vm = this;
+    firebaseService.getUser.then(function (user) {
+        
+    });
 }

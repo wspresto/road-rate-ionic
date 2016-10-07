@@ -25,4 +25,12 @@ function LoginCtrl ($scope, $ionicHistory, firebaseService) {
         }
     }
 
+    $scope.toggleLoginProviders = function (test) {
+        var chosenProvider = localStorage.getItem("chosenProvider") || {};
+
+        if (chosenProvider.length) {
+            this.alreadyRegistered.provider = JSON.parse(chosenProvider).provider;
+        }
+    }
+
 }

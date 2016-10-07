@@ -1,9 +1,9 @@
 <ion-view view-title="Login" hide-nav-bar="true">
     <ion-content>
-        <div class="card login">
-            <h1 class="login-header">Welcome to the Road Rate App!</h1>
+        <div class="card login" ng-controller="LoginCtrl" ng-model="alreadyRegistered" ng-init="alreadyRegistered={provider: null}">
+            <h1 class="login-header">Road Rate</h1>
 
-            <form ng-model="toggleRegistrationForm" ng-init="toggleRegistrationForm={toggle: false}">
+            <form ng-model="toggleRegistrationForm" ng-init="toggleRegistrationForm={toggle: false}" ng-if="alreadyRegistered.provider == 'email.com' || alreadyRegistered.provider == null">
                 <div class="container">
                     <legend>Please login</legend>
                     <label for="full-name" ng-if="toggleRegistrationForm.toggle">Full Name</label>
@@ -27,13 +27,13 @@
                 </div>
 
                 <div class="container">
-                    <button ng-click="toggleSignUp($event)">Register</button>
-                    <button ng-click="login(null, toggleRegistrationForm.toggle)" class="login-btn" type="button">Login</button>
+                    <button ng-click="toggleSignUp($event)" >Register</button>
+                    <button ng-click="login('email', toggleRegistrationForm.toggle)" class="login-btn" type="button">Login</button>
                 </div>
             </form>
-            <div class="text-center">
-                <button ng-click="login('google')">Google</button>
-                <button ng-click="login('github')">Github</button>
+            <div class="text-center" ng-init="toggleLoginProviders()">
+                <button ng-click="login('google')" ng-if="alreadyRegistered.provider == 'google.com' || alreadyRegistered.provider == null">Google</button>
+                <button ng-click="login('github')" ng-if="alreadyRegistered.provider == 'github.com' || alreadyRegistered.provider == null">Github</button>
             </div>
 
         </div>

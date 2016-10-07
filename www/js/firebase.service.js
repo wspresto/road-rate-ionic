@@ -19,20 +19,20 @@ function firebaseService () {
         initialize: function () {
             this.providers = {
                 google: new firebase.auth.GoogleAuthProvider(),
-                github: new firebase.auth.GithubAuthProvider()
+                github: new firebase.auth.GithubAuthProvider(),
+                email: 'email.com'
             };
-            utils.user = null;
         },
         setUser: function (user) {
-            utils.user = user;
+            this.user = user;
         },
-        getUser: function () {
-            var callback = $q.deferred();
-
-            return callback.promise;
-        },
+        getUser: new Promise (function (resolve, reject) {
+            firebase.auth().onAuthStateChanged(function (user) {
+                resolve();
+            })
+        }),
         clearUser: function () {
-            utils.user = null;
+            this.user = null;
         },
         signout: function () {
             firebase.auth().signOut();
@@ -45,11 +45,13 @@ function firebaseService () {
         },
         login: function (chosenProvider, toggleRegisterationForm) {
             var localStorageProvider = JSON.parse(localStorage.getItem("chosenProvider")) || null;
+            var that = this;
+            
             chosenProvider = chosenProvider || null;
             
-            if (!utils.user) {
+            if (!this.user) {
 
-                if (chosenProvider && localStorageProvider){
+                if (chosenProvider){
                     var provider = this.providers[chosenProvider];
 
                     switch (provider.providerId) {
@@ -62,16 +64,15 @@ function firebaseService () {
                             this.setLocalStorageProvider(provider.providerId);
                             break;
                         default: 
-                            provider = null;
-                            this.setLocalStorageProvider(provicer.providerId);
+                            this.setLocalStorageProvider(provider);
                     }
                 }
 
-                if (provider) {
+                if (provider && provider !== 'email.com') {
                     firebase.auth().signInWithPopup(provider).then(function(result) {
                         // This gives you a Google Access Token. You can use it to access the Google API.
-                        utils.user = result.user;
-                        utils.user.token = result.credential.accessToken;
+                        that.user = result.user;
+                        that.user.token = result.credential.accessToken;
 
                     }).catch(function(error) {
                         var errorCode = error.code;
@@ -89,7 +90,7 @@ function firebaseService () {
                     var email = document.getElementById('email').value;
                     var password = document.getElementById('password').value;
                     var that = this;
-
+                    
                     firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
                         that.setUser = user;
                     }).catch(function(error) {
@@ -131,7 +132,7 @@ function firebaseService () {
 
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then(function (user) {
-                    user.fullName = fullName;
+                    user.providerData.displayName = fullName;
                     that.setUser(user);
                 })
                 .catch(function(error) {

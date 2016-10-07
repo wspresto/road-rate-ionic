@@ -41,7 +41,7 @@ angular.module('unisys.onboarding',
     firebase.auth().onAuthStateChanged(function (user) {
       if (!user) {
         $state.go('app.login');
-      } else if (user && $state.current.name !== 'app.login') {
+      } else if ($state.current.name !== 'app.login') {
         $state.go($state.current.name);
       } else {
         $state.go('app.landing');
@@ -91,6 +91,7 @@ angular.module('unisys.onboarding',
   })
   .state('app.login', {
     url: '/login',
+    cache: false,
     views: {
       'content@app': {
         controller: 'LoginCtrl as vm',
