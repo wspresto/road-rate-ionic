@@ -9,6 +9,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     var voteConfirmationDelay = 5 * 1000;
     var gpsPollingRate =  45 * 1000;
     var gpsPollingThread = null;
+    var userID = null; 
     vm.downVote = downVote;
     vm.upVote = upVote;
     vm.map = {
@@ -30,18 +31,17 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     };
     
     init();
-    function getUID () {
-        return firebaseService.user.uid;
-    }
+
     function getRoadFireBase (path) {
         return firebase.database().ref().child('roads/' + path);
     }
     function getDisplayName () {
-        return 'Will';
+        return vm.displayName;
     }
     function downVote () {
+        if (userID === null)
+            return;
         var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
-        var userID = getUID(); 
         var resultText = '';
         roadNode.once('value', function(road) {
             if (road.val()) {
@@ -77,8 +77,9 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         });
     }
     function upVote () {
-        var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
-        var userID = getUID();        
+        if (userID === null)
+            return;   
+        var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);      
         roadNode.once('value', function(road) {
             if (road.val()) {
                 var details = {
@@ -112,8 +113,9 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
             }
         });        
     }
-    function pushToActivityFeed (title) {
-        var userID = getUID();            
+    function pushToActivityFeed (title) {   
+        if (userID === null)
+            return;            
         var path = 'activity/all';
         var newKey = firebase.database().ref().child(path).push().key;
         firebase.database().ref(path + '/' + newKey).set({
@@ -173,6 +175,10 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         });      
     }    
     function init () {
+        firebaseService.getUser().then(function (user) {
+            userID = user.uid;
+            vm.displayName = user.email.split('@')[0];
+        });
         $ionicPlatform.ready(function() {
             esriRegistry.get('roadMap').then(function (map) {
                 map.on("load", function() {
