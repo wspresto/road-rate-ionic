@@ -1,9 +1,9 @@
 angular.module('unisys.onboarding.firebase.service', [])
     .factory('firebaseService', firebaseService);
 
-    firebaseService.$inject = [];
+    firebaseService.$inject = ['$q'];
 
-function firebaseService () {
+function firebaseService ($q) {
 
     var config = {
         apiKey: "AIzaSyDRaQNaGdU0RZNXZEAciKlL2xtmSfMM-_M",
@@ -26,11 +26,14 @@ function firebaseService () {
         setUser: function (user) {
             this.user = user;
         },
-        getUser: new Promise (function (resolve, reject) {
+        getUser: function () {
+            var def = $q.defer();  
             firebase.auth().onAuthStateChanged(function (user) {
-                resolve();
-            })
-        }),
+                var userData = user;
+                def.resolve(userData);
+            });
+            return def.promise;
+        },
         clearUser: function () {
             this.user = null;
         },

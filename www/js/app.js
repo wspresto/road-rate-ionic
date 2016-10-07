@@ -82,6 +82,7 @@ angular.module('unisys.onboarding',
   })
   .state('app.profile', {
     url: '/profile',
+    cache: false,
     views: {
       'content@app': {
         controller: 'ProfileCtrl as vm',
