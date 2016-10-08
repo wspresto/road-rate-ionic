@@ -188,7 +188,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                         } else if (vm.road.dislikes === vm.road.likes) {
                             vm.road.opinion = 'You have no strong feelings either way for this road!';                            
                         } else {
-                            vm.road.opinon = 'You like this road.'
+                            vm.road.opinion = 'You like this road.'
                         }
                     });                
                 }, 0);
