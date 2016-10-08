@@ -5,7 +5,7 @@ RoadCtrl.$inject = ['$scope', '$ionicPlatform', '$ionicActionSheet', 'esriRegist
 
 function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK, $cordovaGeolocation, $interval, $q, firebaseService) {
     var vm = this;
-    var zoomLevel = 18;    
+    var zoomLevel = 13;    
     var voteConfirmationDelay = 5 * 1000;
     var gpsPollingRate =  45 * 1000;
     var gpsPollingThread = null;
