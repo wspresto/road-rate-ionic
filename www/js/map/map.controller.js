@@ -27,7 +27,9 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         postal: '',
         dislikes: 0,
         likes: 0,
-        opinion: 'You have not rated this road before.'
+        opinion: 'You have not rated this road before.',
+        latitude: null,
+        longitude: null
     };
     
     init();
@@ -55,7 +57,8 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     } else {
                         vm.road.dislikes++;
                         notify('You hate this road!');
-                        pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!');                          
+                        pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!'); 
+                        pushToMarkers(false);                                                 
                     }               
                 });
             } else {
@@ -70,7 +73,8 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     } else {
                         vm.road.dislikes++;
                         notify('You hate this road!');
-                        pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!');                                 
+                        pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!');     
+                        pushToMarkers(false);                                                    
                     }
                 });
             }
@@ -92,8 +96,9 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     } else {
                         vm.road.likes++;
                         notify('You like this road!');
-                        pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');                        
-                    }                       
+                        pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');    
+                        pushToMarkers(true);                                            
+                    }
                 });
             } else {
                 var details = {
@@ -108,12 +113,27 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                         vm.road.likes++;
                         notify('You like this road!');
                         pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');
+                        pushToMarkers(true);
                     }
                 });
             }
         });        
     }
-    function pushToActivityFeed (title) {   
+    function pushToMarkers (like) {
+        if (userID === null)
+            return;            
+        var path = 'markers';
+        var newKey = firebase.database().ref().child(path).push().key;
+        firebase.database().ref(path + '/' + newKey).set({
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            like: like,
+            uid: userID,
+            roadCode: vm.road.name + ':' + vm.road.postal,
+            longitude: vm.road.longitude,
+            latitude: vm.road.latitude
+        });
+    }    
+    function pushToActivityFeed (title) {
         if (userID === null)
             return;            
         var path = 'activity/all';
@@ -126,7 +146,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         });
     }
     function notify (text) {
-        var close = $ionicActionSheet.show({  
+        var close = $ionicActionSheet.show({
             titleText: text
         });
         $timeout(close, voteConfirmationDelay);               
@@ -134,7 +154,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     function pollGPS () {
         var cb = $q.defer();
         $cordovaGeolocation.getCurrentPosition({
-            enableHighAccuracy: false,
+            enableHighAccuracy: true,
             timeout: 3000
         }).then( function updateLocation (position) {
             esriService.loadModule('esri/geometry/Point').then(function (Point) {
@@ -142,6 +162,8 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 $timeout(function () {vm.map.controller.centerAndZoom(pt, zoomLevel)}, 0); //do not run during $digest
             });
             googleMapsService.discoverRoad(position.coords.latitude, position.coords.longitude).then(function (details) {
+                details.longitude = position.coords.longitude;
+                details.latitude  = position.coords.latitude;
                 cb.resolve(details);
             });
         }, function (err) {
@@ -152,6 +174,8 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     function updateRoadDetails (details) {
         vm.road.name = details.road.short_name;
         vm.road.postal = details.postal.short_name;
+        vm.road.longitude = details.longitude;
+        vm.road.latitude = details.latitude;
         var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
         roadNode.once('value', function(road) {
             if (road.val()) {
@@ -197,6 +221,28 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     gpsPollingThread = $interval(function () {
                         pollGPS().then(updateRoadDetails);
                     }, gpsPollingRate);
+                    //draw markers
+                    var db = firebase.database().ref().child('markers');
+                    esriService.loadModule('esri/symbols/SimpleMarkerSymbol').then(function (SimpleMarkerSymbol) {
+                        esriService.loadModule('esri/geometry/Point').then(function (Point) {
+                            esriService.loadModule('esri/graphic').then(function (Graphic) {
+                                db.on('child_added', function (childNode) {
+                                    var marker = childNode.val();
+                                    var symbol = null;
+                                    if (marker.like) {
+                                        symbol = new SimpleMarkerSymbol();
+                                        symbol.setStyle(SimpleMarkerSymbol.STYLE_CIRCLE);
+                                        symbol.setColor([0,255,0,255]);
+                                    } else {
+                                        symbol = new SimpleMarkerSymbol();
+                                        symbol.setStyle(SimpleMarkerSymbol.STYLE_SQUARE);
+                                        symbol.setColor([255,0,0,255]);
+                                    }
+                                    map.graphics.add(new Graphic(new Point(marker.longitude, marker.latitude), symbol));
+                                });                      
+                            });
+                        });
+                    });                    
                 });
             });            
         });    
