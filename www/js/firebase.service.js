@@ -23,7 +23,6 @@ function firebaseService ($q) {
             };
         },
         setUser: function (user) {
-            debugger;
             this.user = user;
         },
         getUser: function () {

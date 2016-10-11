@@ -27,14 +27,10 @@
                 </div>
 
                 <div class="container">
-                    <button ng-click="toggleSignUp($event)" >Register</button>
-                    <button ng-click="login('email', toggleRegistrationForm.toggle)" class="login-btn" type="button">Login</button>
+                    <button ng-click="toggleSignUp($event)" type="button" >Register</button>
+                    <button ng-click="login('email', toggleRegistrationForm.toggle)" class="login-btn">Login</button>
                 </div>
             </form>
-            <div class="text-center" ng-init="toggleLoginProviders()">
-                <button ng-click="login('google')" ng-if="alreadyRegistered.provider == 'google.com' || alreadyRegistered.provider == null">Google</button>
-            </div>
-
         </div>
     </ion-content>
 </ion-view>
