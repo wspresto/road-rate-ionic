@@ -1,28 +1,23 @@
 angular.module('unisys.onboarding.landing')
 .controller('LandingCtrl', LandingCtrl);
 
-LandingCtrl.$inject = ['$scope', 'moment'];
+LandingCtrl.$inject = ['$scope', '$timeout', 'moment', 'firebaseService'];
 
-function LandingCtrl ($scope, moment) {
+function LandingCtrl ($scope, $timeout, moment, firebaseService) {
     var vm = this;
     vm.today = moment();
-    vm.activities = [
-        {
-            date: vm.today,
-            label: 'You rated Route 7!'
-        },
-        {
-            date: vm.today.subtract(1, 'days'),
-            label: 'You rated 66!'
-        },
-        {
-            date: vm.today.subtract(2, 'days'),
-            label: 'You rated I-95!'
-        },
-        {
-            date: vm.today.subtract(3, 'days'),
-            label: 'You rated I-395!'
-        }        
+    vm.activities = [ ];
 
-    ]
+    init();
+
+    function init () {
+     var db = firebase.database().ref().child('activity/all');
+     db.orderByChild('timestamp').on('child_added', function (childNode) {
+        $timeout(function () {
+            $scope.$apply(function () {         
+                vm.activities.unshift(childNode.val());
+            });
+        }, 0);
+     });  
+    }
 }

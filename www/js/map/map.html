@@ -1,7 +1,15 @@
-<ion-view view-title="Road">
+<ion-view view-title="Map">
     <ion-content>
-        <esri-map on-swipe-right="vm.upVote()" on-swipe-left="vm.downVote()" id="road-map" register-as="roadMap" map-options="vm.map.options"></esri-map>
-        <text-cloud left="10px" bottom="30px"><h2>{{vm.road.name}}</h2><p>{{vm.road.opinion}}</p><p>{{vm.road.dislikes}} dislikes / {{vm.road.likes}} likes</p></text-cloud>
+        <esri-map id="road-map" register-as="roadMap" map-options="vm.map.options"></esri-map>
+        <text-cloud left="10px" bottom="30px">
+            <h2>{{vm.road.name}}</h2>
+            <div class="button-bar">
+                <button ng-click="vm.upVote()" class="button button-balanced">Like</button>
+                <button ng-click="vm.downVote()" class="button button-assertive">Hate</button>
+            </div>
+            <p>{{vm.road.opinion}}</p>            
+            <p>{{vm.road.likes}} likes / {{vm.road.dislikes}} dislikes</p>
+        </text-cloud>
         <div id="location-cursor">
             <div class="dot"></div>
             <div class="pulse"></div>

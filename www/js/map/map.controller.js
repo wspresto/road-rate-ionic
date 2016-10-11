@@ -5,13 +5,13 @@ RoadCtrl.$inject = ['$scope', '$ionicPlatform', '$ionicActionSheet', 'esriRegist
 
 function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $timeout, esriService, googleMapsService, MOCK, $cordovaGeolocation, $interval, $q, firebaseService) {
     var vm = this;
-    var zoomLevel = 18;    
+    var zoomLevel = 13;    
     var voteConfirmationDelay = 5 * 1000;
     var gpsPollingRate =  45 * 1000;
     var gpsPollingThread = null;
+    var userID = null; 
     vm.downVote = downVote;
     vm.upVote = upVote;
-
     vm.map = {
         controller: null,
         options: {
@@ -27,19 +27,23 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         postal: '',
         dislikes: 0,
         likes: 0,
-        opinion: 'You have not rated this road before.'
+        opinion: 'You have not rated this road before.',
+        latitude: null,
+        longitude: null
     };
-
+    
     init();
-    function getUID () {
-        return firebaseService.user.uid;
-    }
+
     function getRoadFireBase (path) {
         return firebase.database().ref().child('roads/' + path);
     }
+    function getDisplayName () {
+        return vm.displayName;
+    }
     function downVote () {
+        if (userID === null)
+            return;
         var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
-        var userID = getUID();   
         var resultText = '';
         roadNode.once('value', function(road) {
             if (road.val()) {
@@ -53,6 +57,8 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     } else {
                         vm.road.dislikes++;
                         notify('You hate this road!');
+                        pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!'); 
+                        pushToMarkers(false);                                                 
                     }               
                 });
             } else {
@@ -62,15 +68,22 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 };
                 details[userID] = firebase.database.ServerValue.TIMESTAMP;                
                 roadNode.set(details, function (err) {
-                    vm.road.dislikes++;
-                    notify('You hate this road!');
+                    if (err) {
+                        notify('You can only vote once per day.');
+                    } else {
+                        vm.road.dislikes++;
+                        notify('You hate this road!');
+                        pushToActivityFeed(getDisplayName() + ' hates ' + vm.road.name + '!');     
+                        pushToMarkers(false);                                                    
+                    }
                 });
             }
         });
     }
     function upVote () {
-        var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
-        var userID = getUID();        
+        if (userID === null)
+            return;   
+        var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);      
         roadNode.once('value', function(road) {
             if (road.val()) {
                 var details = {
@@ -83,7 +96,9 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     } else {
                         vm.road.likes++;
                         notify('You like this road!');
-                    }                       
+                        pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');    
+                        pushToMarkers(true);                                            
+                    }
                 });
             } else {
                 var details = {
@@ -92,14 +107,46 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 };
                 details[userID] = firebase.database.ServerValue.TIMESTAMP;
                 roadNode.set(details, function (err) {
-                    vm.road.likes++;
-                    notify('You like this road!');
+                    if (err) {
+                        notify('You can only vote on this road once per day.');
+                    } else {
+                        vm.road.likes++;
+                        notify('You like this road!');
+                        pushToActivityFeed(getDisplayName() + ' likes ' + vm.road.name + '!');
+                        pushToMarkers(true);
+                    }
                 });
             }
         });        
     }
+    function pushToMarkers (like) {
+        if (userID === null)
+            return;            
+        var path = 'markers';
+        var newKey = firebase.database().ref().child(path).push().key;
+        firebase.database().ref(path + '/' + newKey).set({
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            like: like,
+            uid: userID,
+            roadCode: vm.road.name + ':' + vm.road.postal,
+            longitude: vm.road.longitude,
+            latitude: vm.road.latitude
+        });
+    }    
+    function pushToActivityFeed (title) {
+        if (userID === null)
+            return;            
+        var path = 'activity/all';
+        var newKey = firebase.database().ref().child(path).push().key;
+        firebase.database().ref(path + '/' + newKey).set({
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            title: title,
+            uid: userID,
+            roadCode: vm.road.name + ':' + vm.road.postal
+        });
+    }
     function notify (text) {
-        var close = $ionicActionSheet.show({  
+        var close = $ionicActionSheet.show({
             titleText: text
         });
         $timeout(close, voteConfirmationDelay);               
@@ -107,7 +154,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     function pollGPS () {
         var cb = $q.defer();
         $cordovaGeolocation.getCurrentPosition({
-            enableHighAccuracy: false,
+            enableHighAccuracy: true,
             timeout: 3000
         }).then( function updateLocation (position) {
             esriService.loadModule('esri/geometry/Point').then(function (Point) {
@@ -115,6 +162,8 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                 $timeout(function () {vm.map.controller.centerAndZoom(pt, zoomLevel)}, 0); //do not run during $digest
             });
             googleMapsService.discoverRoad(position.coords.latitude, position.coords.longitude).then(function (details) {
+                details.longitude = position.coords.longitude;
+                details.latitude  = position.coords.latitude;
                 cb.resolve(details);
             });
         }, function (err) {
@@ -125,6 +174,8 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
     function updateRoadDetails (details) {
         vm.road.name = details.road.short_name;
         vm.road.postal = details.postal.short_name;
+        vm.road.longitude = details.longitude;
+        vm.road.latitude = details.latitude;
         var roadNode = getRoadFireBase(vm.road.name + ':' + vm.road.postal);
         roadNode.once('value', function(road) {
             if (road.val()) {
@@ -137,7 +188,7 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                         } else if (vm.road.dislikes === vm.road.likes) {
                             vm.road.opinion = 'You have no strong feelings either way for this road!';                            
                         } else {
-                            vm.road.opinon = 'You like this road.'
+                            vm.road.opinion = 'You like this road.'
                         }
                     });                
                 }, 0);
@@ -148,6 +199,10 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
         });      
     }    
     function init () {
+        firebaseService.getUser().then(function (user) {
+            userID = user.uid;
+            vm.displayName = user.email.split('@')[0];
+        });
         $ionicPlatform.ready(function() {
             esriRegistry.get('roadMap').then(function (map) {
                 map.on("load", function() {
@@ -166,6 +221,28 @@ function RoadCtrl ($scope, $ionicPlatform, $ionicActionSheet, esriRegistry, $tim
                     gpsPollingThread = $interval(function () {
                         pollGPS().then(updateRoadDetails);
                     }, gpsPollingRate);
+                    //draw markers
+                    var db = firebase.database().ref().child('markers');
+                    esriService.loadModule('esri/symbols/SimpleMarkerSymbol').then(function (SimpleMarkerSymbol) {
+                        esriService.loadModule('esri/geometry/Point').then(function (Point) {
+                            esriService.loadModule('esri/graphic').then(function (Graphic) {
+                                db.on('child_added', function (childNode) {
+                                    var marker = childNode.val();
+                                    var symbol = null;
+                                    if (marker.like) {
+                                        symbol = new SimpleMarkerSymbol();
+                                        symbol.setStyle(SimpleMarkerSymbol.STYLE_CIRCLE);
+                                        symbol.setColor([0,255,0,255]);
+                                    } else {
+                                        symbol = new SimpleMarkerSymbol();
+                                        symbol.setStyle(SimpleMarkerSymbol.STYLE_SQUARE);
+                                        symbol.setColor([255,0,0,255]);
+                                    }
+                                    map.graphics.add(new Graphic(new Point(marker.longitude, marker.latitude), symbol));
+                                });                      
+                            });
+                        });
+                    });                    
                 });
             });            
         });    

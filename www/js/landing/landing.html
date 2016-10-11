@@ -1,8 +1,15 @@
 <ion-view view-title="Road Rate Activity">
     <ion-content>
+        <div ng-if="vm.activities.length ===  0" class="card">
+            <div class="item item-text-wrap">
+                <h2>Looks like you don't have any activity yet.</h2>
+                <p>Go and rate some roads, future road rater!</p>
+            </div>
+        </div>        
         <div ng-repeat="activity in vm.activities" class="card">
             <div class="item item-text-wrap">
-                {{activity.label}}
+                <h2>{{activity.title}}</h2>
+                <p>{{activity.timestamp / 1000 | amFromUnix |  amDateFormat:'dddd, MMMM Do YYYY, h:mm a'}}</p>
             </div>
         </div>
     </ion-content>
