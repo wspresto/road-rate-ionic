@@ -28,7 +28,7 @@ function firebaseService ($q) {
         getUser: function () {
             var def = $q.defer();  
             if (utils.user) {
-                return utils.user;
+                def.resolve(utils.user);
             } else {
                 firebase.auth().onAuthStateChanged(function (user) {
                     var userData = user;
