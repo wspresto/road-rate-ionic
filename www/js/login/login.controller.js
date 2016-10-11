@@ -6,16 +6,22 @@ LoginCtrl.$inject = ['$scope', '$ionicHistory', 'firebaseService'];
 function LoginCtrl ($scope, $ionicHistory, firebaseService) {
     var vm = this;
 
+    vm.toggleRegistrationForm = {};
+    vm.alreadyRegistered = {};
+    vm.error = {};
+
     $ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true
     });
 
-    $scope.login = function (chosenProvider, toggleRegistrationForm) {
-        firebaseService.login(chosenProvider, toggleRegistrationForm);
+    vm.login = function (chosenProvider, toggleRegistrationForm, $event) {
+        firebaseService.login(chosenProvider, toggleRegistrationForm).then(function (error) {
+            vm.error = error;
+        });
     }
 
-    $scope.toggleSignUp = function ($event) {
+    vm.toggleSignUp = function ($event) {
         if (this.toggleRegistrationForm.toggle) {
             this.toggleRegistrationForm.toggle = false;
             $event.currentTarget.innerHTML = 'Register';
@@ -25,7 +31,7 @@ function LoginCtrl ($scope, $ionicHistory, firebaseService) {
         }
     }
 
-    $scope.toggleLoginProviders = function (test) {
+    vm.toggleLoginProviders = function (test) {
         var chosenProvider = localStorage.getItem("chosenProvider") || {};
 
         if (chosenProvider.length) {

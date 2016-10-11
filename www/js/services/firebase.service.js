@@ -26,13 +26,14 @@ function firebaseService ($q) {
             this.user = user;
         },
         getUser: function () {
-            var def = $q.defer();  
-            if (utils.user) {
-                return utils.user;
+            var def = $q.defer();
+            var that = this;
+            if (this.user) {
+                return this.user;
             } else {
                 firebase.auth().onAuthStateChanged(function (user) {
                     var userData = user;
-                    utils.user = user;
+                    this.user = user;
                     def.resolve(userData);
                 });                
             }
@@ -49,7 +50,9 @@ function firebaseService ($q) {
         },
         login: function (chosenProvider, toggleRegisterationForm) {
             var localStorageProvider = JSON.parse(localStorage.getItem("chosenProvider")) || null;
+            var def = $q.defer();
             var that = this;
+            that.error = {};
             
             chosenProvider = chosenProvider || null;
             
@@ -80,37 +83,27 @@ function firebaseService ($q) {
                         var email = error.email;
                         var credential = error.credential;
 
-                        if (errorCode === 'auth/account-exists-with-different-credential') {
-                            alert('You have already signed up with a different auth provider for that email.');
-                        } else {
-                            console.error(error);
-                        }
+                        def.resolve(error);
                     });
                 } else if (!toggleRegisterationForm) {
                     var email = document.getElementById('email').value;
                     var password = document.getElementById('password').value;
                     var that = this;
-                    
+
                     firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
                         that.setUser = user;
                     }).catch(function(error) {
-                    
+
                         var errorCode = error.code;
                         var errorMessage = error.message;
 
-                        if (errorCode === 'auth/wrong-password') {
-                            console.log('Wrong password.');
-                        } else {
-                            console.log(errorMessage);
-                        }
-                        console.log(error);
+                        def.resolve(error);
                     });
                 } else {
                     this.handleSignUp(toggleRegisterationForm);
                 }
-                return true;
             }
-            return false;
+            return def.promise;
         },
         handleSignUp: function (toggleRegistrationForm) {
             var fullName = document.getElementById('full-name').value;
@@ -138,13 +131,7 @@ function firebaseService ($q) {
                 .catch(function(error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
-
-                    if (errorCode == 'auth/weak-password') {
-                        alert('The password is too weak.');
-                    } else {
-                        alert(errorMessage);
-                    }
-                    console.log(error);
+                    return error;
                 });
         },
         sendEmailVerification: function () {

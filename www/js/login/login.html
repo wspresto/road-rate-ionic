@@ -1,35 +1,37 @@
 <ion-view view-title="Login" hide-nav-bar="true">
     <ion-content>
-        <div class="card login" ng-controller="LoginCtrl" ng-model="alreadyRegistered" ng-init="alreadyRegistered={provider: null}">
+        <div class="card login" ng-controller="LoginCtrl" ng-init="vm.alreadyRegistered={provider: null}">
             <h1 class="login-header">Road Rate</h1>
-
-            <form ng-model="toggleRegistrationForm" ng-init="toggleRegistrationForm={toggle: false}" ng-if="alreadyRegistered.provider == 'email.com' || alreadyRegistered.provider == null">
+            <form ng-model="vm.toggleRegistrationForm" ng-init="vm.toggleRegistrationForm={toggle: false}" ng-if="vm.alreadyRegistered.provider == 'email.com' || vm.alreadyRegistered.provider == null">
                 <div class="container">
                     <legend>Please login</legend>
-                    <label for="full-name" ng-if="toggleRegistrationForm.toggle">Full Name</label>
-                    <input id="full-name" type="text" ng-if="toggleRegistrationForm.toggle" placeholder="John Doe" />
+                    <label for="full-name" ng-if="vm.toggleRegistrationForm.toggle">Full Name</label>
+                    <input id="full-name" type="text" ng-if="vm.toggleRegistrationForm.toggle" placeholder="John Doe" />
                     <label for="email">Email</label>
                     <input type="text" id="email" class="form-control" placeholder="john.doe@gmail.com" 
                         data-example="john.doe@email.com" data-validation-required-message="Please enter your email address." required/>
                     <p class="help-block text-danger"></p>
                     <label for="confirm-email" ng-if="toggleRegistrationForm.toggle">Confirm Email</label>
-                    <input type="text" ng-if="toggleRegistrationForm.toggle" id="confirm-email" class="form-control" placeholder="john.doe@gmail.com" 
-                        data-example="john.doe@email.com" data-validation-required-message="Please enter your email address." ng-required="toggleRegistragionForm.toggle" />
+                    <input type="text" ng-if="vm.toggleRegistrationForm.toggle" id="confirm-email" class="form-control" placeholder="john.doe@gmail.com" 
+                        data-example="john.doe@email.com" data-validation-required-message="Please enter your email address." ng-required="vm.toggleRegistragionForm.toggle" />
                     <label for="password">Password</label>
                     <p class="help-block text-danger"></p>
                     <input type="password" id="password" class="form-control" placeholder="Password123!" 
                         data-example="Password123!" data-validation-required-message="Please enter your password." required />
                     <p class="help-block text-danger"></p>
-                    <label for="confirm-password" ng-if="toggleRegistrationForm.toggle">Confirm Password</label>
-                    <input type="password" ng-if="toggleRegistrationForm.toggle" id="confirm-password" class="form-control" placeholder="Password123!" 
-                        data-example="Password123!" data-validation-required-message="Please enter your password." ng-required="toggleRegistragionForm.toggle" />
+                    <label for="confirm-password" ng-if="vm.toggleRegistrationForm.toggle">Confirm Password</label>
+                    <input type="password" ng-if="vm.toggleRegistrationForm.toggle" id="confirm-password" class="form-control" placeholder="Password123!" 
+                        data-example="Password123!" data-validation-required-message="Please enter your password." ng-required="vm.toggleRegistragionForm.toggle" />
                     <p class="help-block text-danger"></p>
                 </div>
 
                 <div class="container">
-                    <button ng-click="toggleSignUp($event)" type="button" >Register</button>
-                    <button ng-click="login('email', toggleRegistrationForm.toggle)" class="login-btn">Login</button>
+                    <button ng-click="vm.toggleSignUp($event)" type="button" >Register</button>
+                    <button ng-click="vm.login('email', vm.toggleRegistrationForm.toggle, $event)" class="login-btn">Login</button>
                 </div>
+                <p class="error-message" ng-if="vm.error.code">
+                    Error: {{vm.error.message}}
+                </p>
             </form>
         </div>
     </ion-content>
