@@ -8,24 +8,24 @@ function firebaseService ($q, FIREBASE_CONFIG) {
 
     var utils = {
         initialize: function () {
-            this.user = null;
-            this.providers = {
+            utils.user = null;
+            utils.providers = {
                 google: new firebase.auth.GoogleAuthProvider(),
                 email: 'email.com'
             };
         },
         setUser: function (user) {
-            this.user = user;
+            utils.user = user;
         },
         getUser: function () {
             var def = $q.defer();
-            var that = this;
-            if (this.user) {
-                return this.user;
+
+            if (utils.user) {
+                def.resolve(utils.user);
             } else {
                 firebase.auth().onAuthStateChanged(function (user) {
                     var userData = user;
-                    this.user = user;
+                    utils.user = user;
                     def.resolve(userData);
                 });                
             }
@@ -33,7 +33,7 @@ function firebaseService ($q, FIREBASE_CONFIG) {
         },
         signout: function () {
             firebase.auth().signOut();
-            this.setUser(null);
+            utils.setUser(null);
         },
         setLocalStorageProvider: function (provider) {
             localStorage.setItem('chosenProvider', JSON.stringify({
