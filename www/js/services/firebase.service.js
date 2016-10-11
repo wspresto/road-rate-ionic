@@ -1,18 +1,10 @@
 angular.module('unisys.onboarding.firebase.service', [])
     .factory('firebaseService', firebaseService);
 
-    firebaseService.$inject = ['$q'];
+    firebaseService.$inject = ['$q', 'FIREBASE_CONFIG'];
 
-function firebaseService ($q) {
-
-    var config = {
-        apiKey: "AIzaSyDRaQNaGdU0RZNXZEAciKlL2xtmSfMM-_M",
-        authDomain: "road-rate.firebaseapp.com",
-        databaseURL: "https://road-rate.firebaseio.com",
-        storageBucket: "road-rate.appspot.com",
-        messagingSenderId: "452486727320"
-    };
-    firebase.initializeApp(config);
+function firebaseService ($q, FIREBASE_CONFIG) {
+    firebase.initializeApp(FIREBASE_CONFIG);
 
     var utils = {
         initialize: function () {

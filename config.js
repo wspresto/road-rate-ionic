@@ -13,6 +13,13 @@ module.exports = {
     ngDocs: './docs/'
   },
   constants: {
+    FIREBASE_CONFIG: {
+        apiKey: "AIzaSyDRaQNaGdU0RZNXZEAciKlL2xtmSfMM-_M",
+        authDomain: "road-rate.firebaseapp.com",
+        databaseURL: "https://road-rate.firebaseio.com",
+        storageBucket: "road-rate.appspot.com",
+        messagingSenderId: "452486727320"
+    },
     GOOGLE_API_KEY: 'AIzaSyA3Ydfsl4tqTyxG1m3ANowCScn4zXFZFs0',
     GOOGLE_API_URLS: {
       GEOCODING: 'https://maps.googleapis.com/maps/api/geocode/json',
