@@ -15,14 +15,15 @@ function firebaseService ($q) {
     firebase.initializeApp(config);
 
     var utils = {
-        user: null,
         initialize: function () {
+            this.user = null;
             this.providers = {
                 google: new firebase.auth.GoogleAuthProvider(),
                 email: 'email.com'
             };
         },
         setUser: function (user) {
+            debugger;
             this.user = user;
         },
         getUser: function () {
@@ -33,12 +34,9 @@ function firebaseService ($q) {
             });
             return def.promise;
         },
-        clearUser: function () {
-            this.user = null;
-        },
         signout: function () {
             firebase.auth().signOut();
-            this.clearUser();
+            this.setUser(null);
         },
         setLocalStorageProvider: function (provider) {
             localStorage.setItem('chosenProvider', JSON.stringify({
@@ -69,7 +67,7 @@ function firebaseService ($q) {
                 if (provider && provider !== 'email.com') {
                     firebase.auth().signInWithCredential(provider(googleUser.getAuthResponse().id_token)).then(function(result) {
                         // This gives you a Google Access Token. You can use it to access the Google API.
-                        that.user = result.user;
+                        that.setUser(result.user);
                         that.user.token = result.credential.accessToken;
 
                     }).catch(function(error) {
