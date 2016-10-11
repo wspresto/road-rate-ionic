@@ -1,10 +1,15 @@
 .profile {
     padding: 10px;
+    display: flex;
 }
 .profile-image-wrapper {
+    flex: 1;
     img {
         border-radius: 50%;
         max-width: 200px;
         overflow: hidden;
     }
+}
+.user-info {
+    flex: 3;
 }

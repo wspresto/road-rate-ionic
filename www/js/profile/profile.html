@@ -1,11 +1,13 @@
 <ion-view view-title="Profile">
     <ion-content>
         <div class="card profile" ng-repeat="userData in vm.userData">
-            <h2>{{userData.displayName}}</h2>
             <div class="profile-image-wrapper">
                 <img ng-src="{{userData.photoURL}}" alt="profile image" ng-if="userData.photoURL"/>
             </div>
-            <p>{{userData.email}}</p>
+            <div class="user-info">
+                <h2>{{userData.displayName}}</h2>
+                <p>{{userData.email}}</p>
+            </div>
         </div>
     </ion-content>
 </ion-view>

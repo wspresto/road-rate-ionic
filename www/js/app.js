@@ -46,6 +46,7 @@ angular.module('unisys.onboarding',
       } else {
         $state.go('app.landing');
       }
+      firebaseService.setUser();
     });
   });
 }])

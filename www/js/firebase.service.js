@@ -19,7 +19,6 @@ function firebaseService ($q) {
         initialize: function () {
             this.providers = {
                 google: new firebase.auth.GoogleAuthProvider(),
-                github: new firebase.auth.GithubAuthProvider(),
                 email: 'email.com'
             };
         },
@@ -62,17 +61,13 @@ function firebaseService ($q) {
                             provider.addScope('https://www.googleapis.com/auth/plus.login');
                             this.setLocalStorageProvider(provider.providerId);
                             break;
-                        case "github.com":
-                            provider.addScope('repo');
-                            this.setLocalStorageProvider(provider.providerId);
-                            break;
                         default: 
                             this.setLocalStorageProvider(provider);
                     }
                 }
 
                 if (provider && provider !== 'email.com') {
-                    firebase.auth().signInWithPopup(provider).then(function(result) {
+                    firebase.auth().signInWithCredential(provider(googleUser.getAuthResponse().id_token)).then(function(result) {
                         // This gives you a Google Access Token. You can use it to access the Google API.
                         that.user = result.user;
                         that.user.token = result.credential.accessToken;
