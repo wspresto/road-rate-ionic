@@ -11,7 +11,7 @@
                     <input type="text" id="email" class="form-control" placeholder="john.doe@gmail.com" 
                         data-example="john.doe@email.com" data-validation-required-message="Please enter your email address." required/>
                     <p class="help-block text-danger"></p>
-                    <label for="confirm-email" ng-if="toggleRegistrationForm.toggle">Confirm Email</label>
+                    <label for="confirm-email" ng-if="vm.toggleRegistrationForm.toggle">Confirm Email</label>
                     <input type="text" ng-if="vm.toggleRegistrationForm.toggle" id="confirm-email" class="form-control" placeholder="john.doe@gmail.com" 
                         data-example="john.doe@email.com" data-validation-required-message="Please enter your email address." ng-required="vm.toggleRegistragionForm.toggle" />
                     <label for="password">Password</label>

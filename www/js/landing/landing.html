@@ -1,16 +1,24 @@
 <ion-view view-title="Road Rate Activity">
     <ion-content>
-        <div ng-if="vm.activities.length ===  0" class="card">
+        <div ng-if="vm.messages.length ===  0" class="card">
             <div class="item item-text-wrap">
-                <h2>Looks like you don't have any activity yet.</h2>
-                <p>Go and rate some roads, future road rater!</p>
+                <h2>This channel is empty</h2>
+                <p>There are no messages here.</p>
             </div>
         </div>        
-        <div ng-repeat="activity in vm.activities" class="card">
+        <div ng-repeat="message in vm.messages" class="card">
             <div class="item item-text-wrap">
-                <h2>{{activity.title}}</h2>
-                <p>{{activity.timestamp / 1000 | amFromUnix |  amDateFormat:'dddd, MMMM Do YYYY, h:mm a'}}</p>
+                <h2>{{message.content}}</h2>
+                <p>{{message.timestamp | amFromUnix |  amDateFormat:'dddd, MMMM Do YYYY, h:mm a'}}</p>
             </div>
         </div>
     </ion-content>
+    <ion-footer-bar align-title="left" class="bar">
+    <div id="chat-box">
+        <input ng-model="vm.message.content" type="text" placeholder="Chat up your homies yo..."/>
+    </div>
+    <div class="buttons" >
+        <button class="button" ng-click="vm.sendMessage()">Send</button>
+    </div>
+    </ion-footer-bar>    
 </ion-view>

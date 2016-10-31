@@ -14,11 +14,11 @@ module.exports = {
   },
   constants: {
     FIREBASE_CONFIG: {
-        apiKey: "AIzaSyDRaQNaGdU0RZNXZEAciKlL2xtmSfMM-_M",
-        authDomain: "road-rate.firebaseapp.com",
-        databaseURL: "https://road-rate.firebaseio.com",
-        storageBucket: "road-rate.appspot.com",
-        messagingSenderId: "452486727320"
+      apiKey: "AIzaSyD1ujWh0Y9bfAg1f3WlpBQupssVUMTTb4g",
+      authDomain: "relayer-10731.firebaseapp.com",
+      databaseURL: "https://relayer-10731.firebaseio.com",
+      storageBucket: "relayer-10731.appspot.com",
+      messagingSenderId: "546069971227"
     },
     GOOGLE_API_KEY: 'AIzaSyA3Ydfsl4tqTyxG1m3ANowCScn4zXFZFs0',
     GOOGLE_API_URLS: {
@@ -49,8 +49,6 @@ module.exports = {
         'underscore/underscore.js',
         'moment/moment.js',
         'angular-moment/angular-moment.js',
-        'firebase/firebase.js',
-        'angular-esri-map/dist/angular-esri-core.js',
-        'angular-esri-map/dist/angular-esri-map.js'   
+        'firebase/firebase.js'  
         ]   
 };

@@ -9,8 +9,6 @@ angular.module('unisys.onboarding',
   'ionic',
   'ngCordova',
   'angularMoment',
-  'esri.map',
-  'esri.core',
   'unisys.onboarding.controllers',
   'unisys.onboarding.constants',
   'unisys.onboarding.templates',
@@ -19,7 +17,7 @@ angular.module('unisys.onboarding',
   'unisys.onboarding.services'
   ])
 
-.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'firebaseService', 'esriService', function($q, $ionicPlatform, $rootScope, $state, firebaseService, esriService) {
+.run(['$q', '$ionicPlatform', '$rootScope', '$state', 'firebaseService', function($q, $ionicPlatform, $rootScope, $state, firebaseService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -32,10 +30,6 @@ angular.module('unisys.onboarding',
       StatusBar.styleDefault();
     }
   });    
-
-  esriService.loadModule('esri/config').then(function (esriConfig) {
-    esriConfig.defaults.geometryService = "http://www.example.com/arcgis/rest/services/Utilities/Geometry/GeometryServer";
-  });
 
   $rootScope.$on('$stateChangeSuccess', function() {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -62,15 +56,6 @@ angular.module('unisys.onboarding',
       }
     }
   })
-  .state('app.road', {
-    url: '/road',
-    views: {
-      'content@app': {
-        controller: 'RoadCtrl as vm',
-        templateUrl: 'map/map.html'
-      }
-    }
-  })  
   .state('app.landing', {
     url: '/landing',
     views: {
